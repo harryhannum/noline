@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:noLine/firestore_adapter.dart';
+import 'package:noLine/firestore_line_fetcher.dart';
+import 'package:noLine/line_view.dart';
 import 'package:noLine/main.dart';
 import 'package:noLine/models/line.dart';
-import 'package:noLine/models/user.dart';
 
 class LineManagement extends StatefulWidget {
   LineManagement({Key key}) : super(key: key) {}
@@ -13,8 +13,18 @@ class LineManagement extends StatefulWidget {
 }
 
 class _LineManagementState extends State<LineManagement> {
+  final FirestoreLineFetcher firestoreLineFetcher = FirestoreLineFetcher();
   final FirestoreAdapter firestoreAdapter = FirestoreAdapter();
+
   final lineID = "line";
+
+  void advanceLine(Line line) {
+    setState(() {
+      firestoreAdapter.updateDocument(lineID, "line_data",
+          {"currentPlaceInLine": (line.currentPlaceInLine + 1)},
+          merge: true);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,46 +39,48 @@ class _LineManagementState extends State<LineManagement> {
     return Scaffold(
       appBar: MyAppBar(context),
       body: Center(
-          child: StreamBuilder(
-              stream: firestoreAdapter.getCollectionStream(lineID),
+          child: Column(
+        children: [
+          StreamBuilder(
+              stream:
+                  firestoreLineFetcher.getLineStreamFromFirestore(this.lineID),
               builder: (context, snapshot) {
-                Line line = Line();
-                line.usersInLine = [];
-                line.lineId = lineID;
-
-                for (DocumentSnapshot document in snapshot?.data?.docs ?? []) {
-                  if (document.id == "line_data") {
-                    line.currentPlaceInLine =
-                        document.data()["currentPlaceInLine"];
-                  }
-
-                  User user = User();
-                  user.id = document.id;
-                  user.placeInLine = document.data()["placeInLine"];
-
-                  line.usersInLine.add(user);
-                }
+                Line line = snapshot?.data ?? Line();
 
                 return Column(
                   children: [
-                    Text(
-                      "Line Management",
-                      style: titleStyle,
+                    Text("Line Management"),
+                    LineView(
+                      line: line,
                     ),
-                    Text(
-                      "Line ${line.lineId}",
-                      style: subTitleStyle,
-                    ),
-                    Text(
-                      "Current Place In Line ${line.currentPlaceInLine}",
-                      style: subTitleStyle,
-                    ),
-                    SizedBox(
-                      height: screenSize.height / 20,
-                    ),
+                    ((line?.currentPlaceInLine) ?? 0) >=
+                            ((line?.lastPlaceInLine) ?? 0)
+                        ? Container()
+                        : MaterialButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            onPressed: () {
+                              advanceLine(line);
+                            },
+                            child: FittedBox(
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: screenSize.width / 100),
+                                child: Text(
+                                  "NEXT PLEASE",
+                                  style: subTitleStyle
+                                      .merge(TextStyle(color: Colors.white)),
+                                ),
+                              ),
+                            ),
+                            color: Theme.of(context).primaryColor,
+                          )
                   ],
                 );
-              })),
+              }),
+        ],
+      )),
     );
   }
 }
