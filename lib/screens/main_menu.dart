@@ -14,39 +14,36 @@ class _MainMenuState extends State<MainMenu> {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: MyAppBar(context),
       body: Center(
         child: Container(
-          margin: EdgeInsets.only(top: 70),
+          margin: EdgeInsets.only(top: screenSize.height / 10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Container(
                 color: Colors.purple,
-                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                padding: EdgeInsets.symmetric(vertical: screenSize.height / 40, horizontal: screenSize.width / 20),
                 child: Text(
                   'NOLINE',
                   style: TextStyle(
                       color: Colors.white,
-                      fontSize: 50,
+                      fontSize: screenSize.height / 10,
                       fontFamily: "Razuchka"),
                 ),
               ),
-              SizedBox(height: 200),
+              SizedBox(height: screenSize.height / 4),
               RaisedButton(
                   onPressed: () {
                     // Move to "enter line code page"
                     Navigator.pushNamed(context, '/join-line');
-
-                    setState(() {
-                      this.buttonWidth *= 1.02;
-                      this.buttonHeight *= 1.02;
-                    });
                   },
                   child: Container(
-                    width: buttonWidth,
-                    height: buttonHeight,
+                    width: screenSize.width / 4,
+                    height: screenSize.height / 15,
                     child: FittedBox(child: Text('Join a line')),
                   )),
               SizedBox(height: buttonsDistance),
@@ -57,7 +54,7 @@ class _MainMenuState extends State<MainMenu> {
                 },
                 child: Text(
                   'or create a line of your own',
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: screenSize.height / 40),
                 ),
               ),
             ],
