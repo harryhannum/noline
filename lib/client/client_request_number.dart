@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:noLine/firestore_adapter.dart';
 
 class RequestNumber extends StatefulWidget {
   final screenWidth;
   final screenHeight;
   final textController;
+  final lineId;
+  final userId;
 
+  final firestoreAdapter = FirestoreAdapter();
   static bool numberRequested = false;
 
-  RequestNumber(this.screenWidth, this.screenHeight, this.textController);
+  RequestNumber(this.screenWidth, this.screenHeight, this.textController,
+      this.lineId, this.userId);
 
   @override
   _RequestNumberState createState() => _RequestNumberState();
@@ -18,6 +23,12 @@ class _RequestNumberState extends State<RequestNumber> {
   void handleSubmit() {
     print(widget.textController.text);
     print(RequestNumber.numberRequested);
+
+    widget.firestoreAdapter.updateDocument('smsWatchers', widget.userId, {
+      'lineId': widget.lineId,
+      'phoneNumber': widget.textController.text,
+      'userId': widget.userId
+    });
 
     setState(() {
       RequestNumber.numberRequested = true;

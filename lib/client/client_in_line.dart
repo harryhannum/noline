@@ -29,13 +29,11 @@ class _InLineState extends State<InLine> {
     updateStats();
   }
 
-  Future<void> updateStats() async
-  {
+  Future<void> updateStats() async {
     await getPosition();
     await getWaitTime();
 
-    setState(() {
-    });
+    setState(() {});
   }
 
   Future<void> getCurrentPositionInLine() async {
@@ -43,9 +41,9 @@ class _InLineState extends State<InLine> {
         await firestoreAdapter.getDocument(widget.lineId, 'line_data');
     this.currentPositionInLine = documentSnapshot.data()['currentPlaceInLine'];
 
-    print("lineId: " +
+    debugPrint("lineId: " +
         widget.lineId +
-        "currentPositionInLine: " +
+        ", currentPositionInLine: " +
         this.currentPositionInLine.toString());
   }
 
@@ -54,11 +52,11 @@ class _InLineState extends State<InLine> {
         await firestoreAdapter.getDocument(widget.lineId, widget.userId);
     this.userPositionInLine = documentSnapshot.data()['placeInLine'];
 
-    print("lineId: " +
+    debugPrint("lineId: " +
         widget.lineId +
-        "userId: " +
+        ", userId: " +
         widget.userId +
-        "userPlaceInLine: " +
+        ", userPlaceInLine: " +
         this.currentPositionInLine.toString());
   }
 
@@ -127,7 +125,8 @@ class _InLineState extends State<InLine> {
                 fontFamily: 'LinLibertine'),
           ),
           SizedBox(height: screenHeight * .03),
-          RequestNumber(screenWidth, screenHeight, textController)
+          RequestNumber(screenWidth, screenHeight, textController,
+              widget.lineId, widget.userId)
         ]),
       ),
     );
