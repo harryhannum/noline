@@ -5,7 +5,7 @@ class MainMenu extends StatefulWidget {
   MainMenu(AppBar appBar) {
     this.appBar = appBar;
   }
-  
+
   AppBar appBar;
 
   @override
@@ -42,6 +42,8 @@ class _MainMenuState extends State<MainMenu> {
               RaisedButton(
                   onPressed: () {
                     // Move to "enter line code page"
+                    Navigator.pushNamed(context, '/join-line');
+
                     setState(() {
                       this.buttonWidth *= 1.02;
                       this.buttonHeight *= 1.02;
