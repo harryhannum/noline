@@ -1,15 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:noLine/main.dart';
-import 'package:pinput/pin_put/pin_put.dart';
+import 'package:noLine/firestore_adapter.dart';
+import 'package:noLine/models/line.dart';
+import 'package:noLine/models/user.dart';
 
 class LineManagement extends StatefulWidget {
+  LineManagement({Key key}) : super(key: key) {}
+
   @override
   _LineManagementState createState() => _LineManagementState();
 }
 
 class _LineManagementState extends State<LineManagement> {
-  final FocusNode _pinPutFocusNode = FocusNode();
-  final TextEditingController _pinPutController = TextEditingController();
+  final FirestoreAdapter firestoreAdapter = FirestoreAdapter();
+  final lineID = "line";
 
   @override
   Widget build(BuildContext context) {
@@ -31,103 +35,45 @@ class _LineManagementState extends State<LineManagement> {
     return Scaffold(
       appBar: MyAppBar(context),
       body: Center(
-        child: Column(
-          children: [
-            Text(
-              "Line Management",
-              style: titleStyle,
-            ),
-            Text(
-              "Enter existing line code",
-              style: subTitleStyle,
-            ),
-            SizedBox(
-              height: screenSize.height / 20,
-            ),
-            Form(
-              child: Column(
-                children: [
-                  Container(
-                    width: screenSize.height * 0.8,
-                    child: PinPut(
-                      fieldsCount: 5,
-                      eachFieldHeight: 40.0,
-                      onSubmit: (String pin) {},
-                      focusNode: _pinPutFocusNode,
-                      controller: _pinPutController,
-                      submittedFieldDecoration: pinPutDecoration.copyWith(
-                          borderRadius: BorderRadius.circular(12.0),
-                          border: Border.all(
-                              color: Theme.of(context).primaryColor)),
-                      selectedFieldDecoration: pinPutDecoration,
-                      followingFieldDecoration: pinPutDecoration.copyWith(
-                        border: Border.all(
-                          color: Colors.black,
-                        ),
-                      ),
+          child: StreamBuilder(
+              stream: firestoreAdapter.getCollectionStream(lineID),
+              builder: (context, snapshot) {
+                Line line = Line();
+                line.lineId = lineID;
+
+                for (DocumentSnapshot document in snapshot.data) {
+                  if (document.id == "line_data") {
+                    line.currentPlaceInLine =
+                        document.data()["currentPlaceInLine"];
+                  }
+
+                  User user = User();
+                  user.id = document.id;
+                  user.placeInLine = document.data()["placeInLine"];
+
+                  line.usersInLine.add(user);
+                }
+
+                return Column(
+                  children: [
+                    Text(
+                      "Line Management",
+                      style: titleStyle,
                     ),
-                  ),
-                  SizedBox(
-                    height: screenSize.height / 20,
-                  ),
-                  Container(
-                    width: screenSize.height * 0.8,
-                    child: MaterialButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      onPressed: () {},
-                      child: FittedBox(
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: screenSize.width / 100),
-                          child: Text(
-                            "SUBMIT",
-                            style: subTitleStyle
-                                .merge(TextStyle(color: Colors.white)),
-                          ),
-                        ),
-                      ),
-                      color: Theme.of(context).primaryColor,
+                    Text(
+                      "Line ${line.lineId}",
+                      style: subTitleStyle,
                     ),
-                  )
-                ],
-              ),
-            ),
-            SizedBox(
-              height: screenSize.height / 20,
-            ),
-            Text(
-              "OR",
-              style: subTitleStyle,
-            ),
-            SizedBox(
-              height: screenSize.height / 20,
-            ),
-            Container(
-              width: screenSize.height * 0.8,
-              child: MaterialButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-                onPressed: () {},
-                child: FittedBox(
-                  child: Container(
-                    padding:
-                        EdgeInsets.symmetric(vertical: screenSize.width / 100),
-                    child: Text(
-                      "create a new line",
-                      style:
-                          subTitleStyle.merge(TextStyle(color: Colors.white)),
+                    Text(
+                      "Current Place In Line ${line.currentPlaceInLine}",
+                      style: subTitleStyle,
                     ),
-                  ),
-                ),
-                color: Theme.of(context).primaryColor,
-              ),
-            )
-          ],
-        ),
-      ),
+                    SizedBox(
+                      height: screenSize.height / 20,
+                    ),
+                  ],
+                );
+              })),
     );
   }
 }

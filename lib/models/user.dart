@@ -1,4 +1,4 @@
 class User {
   String id;
-  int lineNumber;
+  int placeInLine;
 }
