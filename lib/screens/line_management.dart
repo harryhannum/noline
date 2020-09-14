@@ -33,9 +33,10 @@ class _LineManagementState extends State<LineManagement> {
               stream: firestoreAdapter.getCollectionStream(lineID),
               builder: (context, snapshot) {
                 Line line = Line();
+                line.usersInLine = [];
                 line.lineId = lineID;
 
-                for (DocumentSnapshot document in snapshot.data) {
+                for (DocumentSnapshot document in snapshot.data.docs) {
                   if (document.id == "line_data") {
                     line.currentPlaceInLine =
                         document.data()["currentPlaceInLine"];

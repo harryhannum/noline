@@ -78,7 +78,9 @@ class _ManagerLoginState extends State<ManagerLogin> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5.0),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/line-mangement');
+                      },
                       child: FittedBox(
                         child: Container(
                           padding: EdgeInsets.symmetric(
