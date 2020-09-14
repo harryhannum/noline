@@ -26,10 +26,15 @@ class _InLineState extends State<InLine> {
   @override
   void initState() {
     super.initState();
+    updateStats();
+  }
 
-    setState(() async {
-      await getPosition();
-      await getWaitTime();
+  Future<void> updateStats() async
+  {
+    await getPosition();
+    await getWaitTime();
+
+    setState(() {
     });
   }
 
