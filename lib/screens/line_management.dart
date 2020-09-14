@@ -36,7 +36,7 @@ class _LineManagementState extends State<LineManagement> {
                 line.usersInLine = [];
                 line.lineId = lineID;
 
-                for (DocumentSnapshot document in snapshot.data.docs) {
+                for (DocumentSnapshot document in snapshot?.data?.docs ?? []) {
                   if (document.id == "line_data") {
                     line.currentPlaceInLine =
                         document.data()["currentPlaceInLine"];
