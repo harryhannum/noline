@@ -1,4 +1,8 @@
+import 'dart:math';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:noLine/firestore_adapter.dart';
 import 'package:noLine/main.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 
@@ -12,6 +16,32 @@ class ManagerLogin extends StatefulWidget {
 class _ManagerLoginState extends State<ManagerLogin> {
   final FocusNode _pinPutFocusNode = FocusNode();
   final TextEditingController _pinPutController = TextEditingController();
+  final FirestoreAdapter firestoreAdapter = FirestoreAdapter();
+  Future<int> createNewLinePressed() async {
+    Random random = new Random();
+
+    int randomLineId = random.nextInt(10000);
+
+    QuerySnapshot lineSnapshot =
+        await firestoreAdapter.getCollection(randomLineId.toString());
+    while (lineSnapshot.docs.length != 0) {
+      lineSnapshot =
+          await firestoreAdapter.getCollection(randomLineId.toString());
+      randomLineId = random.nextInt(10000);
+    }
+
+    firestoreAdapter.updateDocument(randomLineId.toString(), "line_data",
+        {"currentPlaceInLine": 0, "lastPlaceInLine": 0});
+
+    return randomLineId;
+  }
+
+  bool isNumeric(String s) {
+    if (s == null) {
+      return false;
+    }
+    return double.parse(s, (e) => null) != null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +56,7 @@ class _ManagerLoginState extends State<ManagerLogin> {
       color: Colors.white,
       borderRadius: BorderRadius.circular(10.0),
       border: Border.all(
-        color: Colors.black.withOpacity(.5),
+        color: Colors.black45,
       ),
     );
 
@@ -37,11 +67,17 @@ class _ManagerLoginState extends State<ManagerLogin> {
           children: [
             Text(
               "Line Manager",
-              style: titleStyle,
+              style: Theme.of(context)
+                  .textTheme
+                  .headline2
+                  .merge(TextStyle(color: Colors.black87)),
             ),
             Text(
               "Enter existing line code",
-              style: subTitleStyle,
+              style: Theme.of(context)
+                  .textTheme
+                  .headline4
+                  .merge(TextStyle(color: Colors.black87)),
             ),
             SizedBox(
               height: screenSize.height / 20,
@@ -50,10 +86,15 @@ class _ManagerLoginState extends State<ManagerLogin> {
               child: Column(
                 children: [
                   Container(
-                    width: screenSize.height * 0.8,
+                    width: screenSize.height * 0.6,
                     child: PinPut(
-                      fieldsCount: 5,
-                      eachFieldHeight: 40.0,
+                      fieldsCount: 4,
+                      eachFieldHeight: screenSize.height * 0.07,
+                      eachFieldWidth: screenSize.height * 0.06,
+                      textStyle: Theme.of(context)
+                          .textTheme
+                          .headline4
+                          .merge(TextStyle(color: Colors.black87)),
                       onSubmit: (String pin) {},
                       focusNode: _pinPutFocusNode,
                       controller: _pinPutController,
@@ -64,29 +105,37 @@ class _ManagerLoginState extends State<ManagerLogin> {
                       selectedFieldDecoration: pinPutDecoration,
                       followingFieldDecoration: pinPutDecoration.copyWith(
                         border: Border.all(
-                          color: Colors.black,
+                          color: Colors.black54,
                         ),
                       ),
+                      validator: (string) {
+                        return (isNumeric(string) && int.parse(string) > 999)
+                            ? null
+                            : "Please enter a valid code";
+                      },
                     ),
                   ),
                   SizedBox(
                     height: screenSize.height / 20,
                   ),
                   Container(
-                    width: screenSize.height * 0.8,
+                    width: screenSize.height * 0.7,
                     child: MaterialButton(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5.0),
                       ),
                       onPressed: () {
-                        Navigator.pushNamed(context, '/line-mangement');
+                        if (isNumeric(_pinPutController.text)) {
+                          Navigator.pushNamed(context, '/line-mangement',
+                              arguments: _pinPutController.text);
+                        }
                       },
                       child: FittedBox(
                         child: Container(
                           padding: EdgeInsets.symmetric(
                               vertical: screenSize.width / 100),
                           child: Text(
-                            "SUBMIT",
+                            "submit",
                             style: subTitleStyle
                                 .merge(TextStyle(color: Colors.white)),
                           ),
@@ -109,12 +158,16 @@ class _ManagerLoginState extends State<ManagerLogin> {
               height: screenSize.height / 20,
             ),
             Container(
-              width: screenSize.height * 0.8,
+              width: screenSize.height * 0.7,
               child: MaterialButton(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5.0),
                 ),
-                onPressed: () {},
+                onPressed: () async {
+                  int lineId = await createNewLinePressed();
+                  Navigator.pushNamed(context, '/line-mangement',
+                      arguments: lineId.toString());
+                },
                 child: FittedBox(
                   child: Container(
                     padding:

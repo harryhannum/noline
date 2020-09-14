@@ -38,8 +38,6 @@ class FirebaseLoginWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    MyAppBar appBar = MyAppBar(context);
-
     return FutureBuilder(
         // Initialize FlutterFire:
         future: _initialization,
@@ -71,8 +69,6 @@ class FirebaseLoginWrapper extends StatelessWidget {
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    MyAppBar appBar = MyAppBar(context);
-
     return MaterialApp(
         title: 'NOLINE',
         initialRoute: '/',
@@ -80,8 +76,10 @@ class App extends StatelessWidget {
           '/': (context) => FirebaseLoginWrapper(),
           '/manager-login': (context) => ManagerLogin(),
           '/join-line': (context) => JoinLine(),
-          '/line-mangement': (context) => LineManagement(),
-          '/line-view': (context) => LineView(10)
+          '/line-mangement': (context) =>
+              LineManagement(ModalRoute.of(context).settings.arguments),
+          '/line-view': (context) =>
+              LineView(ModalRoute.of(context).settings.arguments)
         },
         theme: ThemeData(
           primarySwatch: Colors.blue,

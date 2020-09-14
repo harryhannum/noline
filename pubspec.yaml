@@ -27,6 +27,7 @@ dependencies:
   cloud_firestore: ^0.14.0+2
   progress_button: ^0.0.1
   pinput: ^0.2.0
+  animated_text_kit: ^2.2.0
 
 
   # The following adds the Cupertino Icons font to your application.

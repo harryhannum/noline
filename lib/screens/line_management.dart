@@ -6,7 +6,9 @@ import 'package:noLine/main.dart';
 import 'package:noLine/models/line.dart';
 
 class LineManagement extends StatefulWidget {
-  LineManagement({Key key}) : super(key: key) {}
+  final lineId;
+
+  LineManagement(this.lineId, {Key key}) : super(key: key);
 
   @override
   _LineManagementState createState() => _LineManagementState();
@@ -16,11 +18,9 @@ class _LineManagementState extends State<LineManagement> {
   final FirestoreLineFetcher firestoreLineFetcher = FirestoreLineFetcher();
   final FirestoreAdapter firestoreAdapter = FirestoreAdapter();
 
-  final lineID = "line";
-
   void advanceLine(Line line) {
     setState(() {
-      firestoreAdapter.updateDocument(lineID, "line_data",
+      firestoreAdapter.updateDocument(widget.lineId, "line_data",
           {"currentPlaceInLine": (line.currentPlaceInLine + 1)},
           merge: true);
     });
@@ -29,10 +29,6 @@ class _LineManagementState extends State<LineManagement> {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    final TextStyle titleStyle = TextStyle(
-        fontSize: screenSize.height / 10,
-        fontWeight: FontWeight.bold,
-        fontFamily: "OpenSans");
     final TextStyle subTitleStyle =
         TextStyle(fontSize: screenSize.height / 20, fontFamily: "OpenSans");
 
@@ -42,14 +38,18 @@ class _LineManagementState extends State<LineManagement> {
           child: Column(
         children: [
           StreamBuilder(
-              stream:
-                  firestoreLineFetcher.getLineStreamFromFirestore(this.lineID),
+              stream: firestoreLineFetcher
+                  .getLineStreamFromFirestore(widget.lineId),
               builder: (context, snapshot) {
                 Line line = snapshot?.data ?? Line();
 
                 return Column(
                   children: [
                     Text("Line Management"),
+                    Text(
+                      "Line ${widget.lineId}",
+                      style: subTitleStyle,
+                    ),
                     LineViewContainer(
                       line: line,
                     ),
@@ -81,7 +81,8 @@ class _LineManagementState extends State<LineManagement> {
                         borderRadius: BorderRadius.circular(5.0),
                       ),
                       onPressed: () {
-                        Navigator.pushNamed(context, '/line-view');
+                        Navigator.pushNamed(context, '/line-view',
+                            arguments: widget.lineId);
                       },
                       child: FittedBox(
                         child: Container(
