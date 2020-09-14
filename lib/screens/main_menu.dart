@@ -39,7 +39,8 @@ class _MainMenuState extends State<MainMenu> {
               RaisedButton(
                   onPressed: () {
                     // Move to "enter line code page"
-                    Navigator.pushNamed(context, '/join-line');
+                    // TODO: Temporary. should be join-line
+                    Navigator.pushNamed(context, '/line-view');
                   },
                   child: Container(
                     width: screenSize.width / 4,

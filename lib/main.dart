@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:noLine/screens/line_management.dart';
+import 'package:noLine/screens/line_view.dart';
 import 'package:noLine/screens/main_menu.dart';
 import 'package:noLine/screens/manager_login.dart';
 
@@ -79,7 +80,8 @@ class App extends StatelessWidget {
           '/': (context) => FirebaseLoginWrapper(),
           '/manager-login': (context) => ManagerLogin(),
           '/join-line': (context) => JoinLine(),
-          '/line-mangement': (context) => LineManagement()
+          '/line-mangement': (context) => LineManagement(),
+          '/line-view': (context) => LineView(10)
         },
         theme: ThemeData(
           primarySwatch: Colors.blue,
