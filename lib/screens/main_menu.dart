@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:noLine/screens/manager_login.dart';
 
 class MainMenu extends StatefulWidget {
   @override
@@ -6,6 +7,10 @@ class MainMenu extends StatefulWidget {
 }
 
 class _MainMenuState extends State<MainMenu> {
+  double buttonWidth = 200;
+  double buttonHeight = 50;
+  double buttonsDistance = 30;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,18 +33,29 @@ class _MainMenuState extends State<MainMenu> {
               ),
               SizedBox(height: 200),
               RaisedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // Move to "enter line code page"
+                    setState(() {
+                      this.buttonWidth *= 1.02;
+                      this.buttonHeight *= 1.02;
+                    });
+                  },
                   child: Container(
-                    width: 300,
-                    height: 50,
-                    child: Center(child: Text('TEST')),
+                    width: buttonWidth,
+                    height: buttonHeight,
+                    child: FittedBox(child: Text('Join a line')),
                   )),
-              Text(
-                'Look at',
-              ),
-              Text(
-                'isaacgarzon',
-                style: Theme.of(context).textTheme.headline4,
+              SizedBox(height: buttonsDistance),
+              InkWell(
+                onTap: () {
+                  // Move to line management page
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ManagerLogin()));
+                },
+                child: Text(
+                  'or create a line of your own',
+                  style: TextStyle(fontSize: 16),
+                ),
               ),
             ],
           ),
