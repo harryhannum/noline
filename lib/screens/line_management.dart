@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 
-class ManagerLogin extends StatefulWidget {
-  ManagerLogin(AppBar appBar, {Key key}) : super(key: key) {
+class LineManagement extends StatefulWidget {
+  LineManagement(AppBar appBar, {Key key}) : super(key: key) {
     this.appBar = appBar;
   }
 
   AppBar appBar;
 
   @override
-  _ManagerLoginState createState() => _ManagerLoginState();
+  _LineManagementState createState() => _LineManagementState();
 }
 
-class _ManagerLoginState extends State<ManagerLogin> {
+class _LineManagementState extends State<LineManagement> {
   final FocusNode _pinPutFocusNode = FocusNode();
   final TextEditingController _pinPutController = TextEditingController();
 
@@ -39,7 +39,7 @@ class _ManagerLoginState extends State<ManagerLogin> {
         child: Column(
           children: [
             Text(
-              "Line Manager",
+              "Line Management",
               style: titleStyle,
             ),
             Text(
