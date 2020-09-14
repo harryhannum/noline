@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:noLine/firestore_adapter.dart';
+import 'package:noLine/firestore_line_fetcher.dart';
+import 'package:noLine/line_view_container.dart';
 import 'package:noLine/main.dart';
 import 'package:noLine/models/line.dart';
 import 'package:noLine/models/user.dart';
@@ -17,6 +19,7 @@ class LineView extends StatefulWidget {
 }
 
 class _LineViewState extends State<LineView> {
+  final FirestoreLineFetcher firestoreLineFetcher = FirestoreLineFetcher();
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
@@ -34,11 +37,13 @@ class _LineViewState extends State<LineView> {
               "Line #${widget.lineID}",
               style: titleStyle,
             ),
-            // Raz's widget here
-            SizedBox(
-              height: screenSize.height / 5,
+            StreamBuilder(
+              stream: firestoreLineFetcher.getLineStreamFromFirestore(widget.lineID.toString()),
+              builder: (context, snapshot) {
+                Line line = snapshot?.data ?? Line();
+                return LineViewContainer(line: line);
+              }
             ),
-            
             Container(
               child: Image.asset('assets/images/qr.png')
             )

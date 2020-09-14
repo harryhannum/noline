@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:noLine/models/line.dart';
 
-class LineView extends StatefulWidget {
+class LineViewContainer extends StatefulWidget {
   final Line line;
 
-  LineView({Key key, this.line}) : super(key: key);
+  LineViewContainer({Key key, this.line}) : super(key: key);
 
   @override
-  _LineViewState createState() => _LineViewState();
+  _LineViewContainerState createState() => _LineViewContainerState();
 }
 
-class _LineViewState extends State<LineView> {
+class _LineViewContainerState extends State<LineViewContainer> {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
