@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:noLine/screens/manager_login.dart';
 
 class MainMenu extends StatefulWidget {
+  MainMenu(AppBar appBar) {
+    this.appBar = appBar;
+  }
+  
+  AppBar appBar;
+
   @override
   _MainMenuState createState() => _MainMenuState();
 }
@@ -14,6 +20,7 @@ class _MainMenuState extends State<MainMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: widget.appBar,
       body: Center(
         child: Container(
           margin: EdgeInsets.only(top: 70),
@@ -49,8 +56,7 @@ class _MainMenuState extends State<MainMenu> {
               InkWell(
                 onTap: () {
                   // Move to line management page
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => ManagerLogin()));
+                  Navigator.pushNamed(context, '/manager-login');
                 },
                 child: Text(
                   'or create a line of your own',

@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:progress_button/progress_button.dart';
 
 class ManagerLogin extends StatefulWidget {
-  ManagerLogin({Key key}) : super(key: key);
+  ManagerLogin(AppBar appBar, {Key key}) : super(key: key) {
+    this.appBar = appBar;
+  }
+  
+  AppBar appBar;
 
   @override
   _ManagerLoginState createState() => _ManagerLoginState();
@@ -17,6 +21,7 @@ class _ManagerLoginState extends State<ManagerLogin> {
     TextStyle subTitleStyle = TextStyle(fontSize: screenSize.width / 20);
 
     return Scaffold(
+      appBar: widget.appBar,
       body: Center(
         child: Column(
           children: [
