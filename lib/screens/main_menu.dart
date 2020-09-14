@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:noLine/main.dart';
 import 'package:noLine/screens/manager_login.dart';
 
 class MainMenu extends StatefulWidget {
-  MainMenu(AppBar appBar) {
-    this.appBar = appBar;
-  }
-
-  AppBar appBar;
-
   @override
   _MainMenuState createState() => _MainMenuState();
 }
@@ -20,7 +15,7 @@ class _MainMenuState extends State<MainMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: widget.appBar,
+      appBar: MyAppBar(context),
       body: Center(
         child: Container(
           margin: EdgeInsets.only(top: 70),

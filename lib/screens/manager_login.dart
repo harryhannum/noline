@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:noLine/main.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 
 class ManagerLogin extends StatefulWidget {
-  ManagerLogin(AppBar appBar, {Key key}) : super(key: key) {
-    this.appBar = appBar;
-  }
-
-  AppBar appBar;
+  ManagerLogin({Key key}) : super(key: key);
 
   @override
   _ManagerLoginState createState() => _ManagerLoginState();
@@ -34,7 +31,7 @@ class _ManagerLoginState extends State<ManagerLogin> {
     );
 
     return Scaffold(
-      appBar: widget.appBar,
+      appBar: MyAppBar(context),
       body: Center(
         child: Column(
           children: [

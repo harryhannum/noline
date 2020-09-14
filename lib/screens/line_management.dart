@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:noLine/main.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 
 class LineManagement extends StatefulWidget {
-  LineManagement(AppBar appBar, {Key key}) : super(key: key) {
-    this.appBar = appBar;
-  }
-
-  AppBar appBar;
-
   @override
   _LineManagementState createState() => _LineManagementState();
 }
@@ -34,7 +29,7 @@ class _LineManagementState extends State<LineManagement> {
     );
 
     return Scaffold(
-      appBar: widget.appBar,
+      appBar: MyAppBar(context),
       body: Center(
         child: Column(
           children: [

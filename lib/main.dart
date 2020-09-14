@@ -14,13 +14,17 @@ void main() {
 class MyAppBar extends AppBar {
   MyAppBar(BuildContext context)
       : super(
-          title: Text('My Title'),
-          leading: new IconButton(
-            icon: new Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
+          title: Text('NOLINE'),
+          leading: !Navigator.canPop(context)
+              ? null
+              : new IconButton(
+                  icon: new Icon(Icons.arrow_back),
+                  onPressed: () {
+                    if (Navigator.canPop(context)) {
+                      Navigator.pop(context);
+                    }
+                  },
+                ),
         );
 }
 
@@ -53,10 +57,10 @@ class FirebaseLoginWrapper extends StatelessWidget {
               return Text("error");
               break;
             case FirebaseState.Done:
-              return MainMenu(appBar);
+              return MainMenu();
               break;
           }
-          
+
           return Text("fuck");
         });
   }
@@ -72,7 +76,7 @@ class App extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => FirebaseLoginWrapper(),
-          '/manager-login': (context) => ManagerLogin(appBar),
+          '/manager-login': (context) => ManagerLogin(),
           '/join-line': (context) => JoinLine()
         },
         theme: ThemeData(
