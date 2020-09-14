@@ -21,6 +21,12 @@ class FirestoreAdapter {
         .get();
   }
 
+  Future<DocumentReference> addDocument(String collectionPath, Map<String, dynamic> data) async
+  {
+    return await _getFirestoreCollectionReference(collectionPath)
+        .add(data);
+  }
+
   Stream<QuerySnapshot> getTopItemsCollectionStream(
       String collectionPath, String value, int limit) {
     return _getFirestoreCollectionReference(collectionPath)
