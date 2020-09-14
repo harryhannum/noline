@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:noLine/firestore_adapter.dart';
 import 'package:noLine/firestore_line_fetcher.dart';
-import 'package:noLine/line_view.dart';
+import 'package:noLine/line_view_container.dart';
 import 'package:noLine/main.dart';
 import 'package:noLine/models/line.dart';
 
@@ -50,7 +50,7 @@ class _LineManagementState extends State<LineManagement> {
                 return Column(
                   children: [
                     Text("Line Management"),
-                    LineView(
+                    LineViewContainer(
                       line: line,
                     ),
                     ((line?.currentPlaceInLine) ?? 0) >=
@@ -75,7 +75,27 @@ class _LineManagementState extends State<LineManagement> {
                               ),
                             ),
                             color: Theme.of(context).primaryColor,
-                          )
+                          ),
+                    MaterialButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/line-view');
+                      },
+                      child: FittedBox(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: screenSize.width / 100),
+                          child: Text(
+                            "View line",
+                            style: subTitleStyle
+                                .merge(TextStyle(color: Colors.white)),
+                          ),
+                        ),
+                      ),
+                      color: Theme.of(context).primaryColor,
+                    )
                   ],
                 );
               }),
