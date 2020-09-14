@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:noLine/firestore_adapter.dart';
+import 'package:noLine/main.dart';
 import 'package:noLine/models/line.dart';
 import 'package:noLine/models/user.dart';
 
@@ -24,13 +25,6 @@ class _LineManagementState extends State<LineManagement> {
         fontFamily: "OpenSans");
     final TextStyle subTitleStyle =
         TextStyle(fontSize: screenSize.height / 20, fontFamily: "OpenSans");
-    final BoxDecoration pinPutDecoration = BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(10.0),
-      border: Border.all(
-        color: Colors.black.withOpacity(.5),
-      ),
-    );
 
     return Scaffold(
       appBar: MyAppBar(context),
