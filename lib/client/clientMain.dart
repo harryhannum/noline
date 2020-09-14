@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:noLine/NoLineTextField.dart';
 import 'package:noLine/firestore_adapter.dart';
+import 'package:noLine/main.dart';
 
 class JoinLine extends StatefulWidget {
   @override
@@ -42,6 +43,7 @@ class _JoinLineState extends State<JoinLine> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      appBar: MyAppBar(context),
       body: Center(
         child: Column(
           children: <Widget>[
