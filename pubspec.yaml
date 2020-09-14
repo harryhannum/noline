@@ -24,6 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
   progress_button: ^0.0.1
+  pinput: ^0.2.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -65,6 +66,10 @@ flutter:
     - family: Razuchka
       fonts:
         - asset: assets/Ranchers-Regular.ttf
+
+    - family: OpenSans
+      fonts:
+        - asset: assets/OpenSans-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

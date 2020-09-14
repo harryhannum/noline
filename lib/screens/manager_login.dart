@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:progress_button/progress_button.dart';
+import 'package:pinput/pin_put/pin_put.dart';
 
 class ManagerLogin extends StatefulWidget {
   ManagerLogin(AppBar appBar, {Key key}) : super(key: key) {
@@ -13,12 +13,25 @@ class ManagerLogin extends StatefulWidget {
 }
 
 class _ManagerLoginState extends State<ManagerLogin> {
+  final FocusNode _pinPutFocusNode = FocusNode();
+  final TextEditingController _pinPutController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
-    TextStyle titleStyle =
-        TextStyle(fontSize: screenSize.width / 10, fontWeight: FontWeight.bold);
-    TextStyle subTitleStyle = TextStyle(fontSize: screenSize.width / 20);
+    final Size screenSize = MediaQuery.of(context).size;
+    final TextStyle titleStyle = TextStyle(
+        fontSize: screenSize.height / 10,
+        fontWeight: FontWeight.bold,
+        fontFamily: "OpenSans");
+    final TextStyle subTitleStyle =
+        TextStyle(fontSize: screenSize.height / 20, fontFamily: "OpenSans");
+    final BoxDecoration pinPutDecoration = BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(10.0),
+      border: Border.all(
+        color: Colors.black.withOpacity(.5),
+      ),
+    );
 
     return Scaffold(
       appBar: widget.appBar,
@@ -39,21 +52,82 @@ class _ManagerLoginState extends State<ManagerLogin> {
             Form(
               child: Column(
                 children: [
-                  Container(child: TextField()),
                   Container(
                     width: screenSize.width * 0.8,
-                    child: ProgressButton(
-                      onPressed: () {},
-                      child: Text(
-                        "submit",
-                        style:
-                            subTitleStyle.merge(TextStyle(color: Colors.white)),
+                    child: PinPut(
+                      fieldsCount: 5,
+                      eachFieldHeight: 40.0,
+                      onSubmit: (String pin) {},
+                      focusNode: _pinPutFocusNode,
+                      controller: _pinPutController,
+                      submittedFieldDecoration: pinPutDecoration.copyWith(
+                          borderRadius: BorderRadius.circular(12.0),
+                          border: Border.all(
+                              color: Theme.of(context).primaryColor)),
+                      selectedFieldDecoration: pinPutDecoration,
+                      followingFieldDecoration: pinPutDecoration.copyWith(
+                        border: Border.all(
+                          color: Colors.black,
+                        ),
                       ),
-                      buttonState: ButtonState.normal,
-                      progressColor: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  SizedBox(
+                    height: screenSize.height / 20,
+                  ),
+                  Container(
+                    width: screenSize.width * 0.8,
+                    child: MaterialButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      onPressed: () {},
+                      child: FittedBox(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: screenSize.width / 100),
+                          child: Text(
+                            "SUBMIT",
+                            style: subTitleStyle
+                                .merge(TextStyle(color: Colors.white)),
+                          ),
+                        ),
+                      ),
+                      color: Theme.of(context).primaryColor,
                     ),
                   )
                 ],
+              ),
+            ),
+            SizedBox(
+              height: screenSize.height / 20,
+            ),
+            Text(
+              "OR",
+              style: subTitleStyle,
+            ),
+            SizedBox(
+              height: screenSize.height / 20,
+            ),
+            Container(
+              width: screenSize.width * 0.8,
+              child: MaterialButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                onPressed: () {},
+                child: FittedBox(
+                  child: Container(
+                    padding:
+                        EdgeInsets.symmetric(vertical: screenSize.width / 100),
+                    child: Text(
+                      "create a new line",
+                      style:
+                          subTitleStyle.merge(TextStyle(color: Colors.white)),
+                    ),
+                  ),
+                ),
+                color: Theme.of(context).primaryColor,
               ),
             )
           ],
