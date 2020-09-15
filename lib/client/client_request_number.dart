@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:noLine/firestore_adapter.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+// import 'package:libphonenumber/libphonenumber.dart';
 
 class RequestNumber extends StatefulWidget {
   final screenWidth;
@@ -10,7 +12,6 @@ class RequestNumber extends StatefulWidget {
   final userId;
 
   final firestoreAdapter = FirestoreAdapter();
-  static bool numberRequested = false;
 
   RequestNumber(this.screenWidth, this.screenHeight, this.textController,
       this.lineId, this.userId);
@@ -20,24 +21,31 @@ class RequestNumber extends StatefulWidget {
 }
 
 class _RequestNumberState extends State<RequestNumber> {
-  void handleSubmit() {
-    print(widget.textController.text);
-    print(RequestNumber.numberRequested);
+  PhoneNumber number = PhoneNumber(isoCode: 'IL');
+  bool numberValid = false;
+  bool numberSubmitted = false;
 
-    widget.firestoreAdapter.updateDocument('smsWatchers', widget.userId, {
-      'lineId': widget.lineId,
-      'phoneNumber': widget.textController.text,
-      'userId': widget.userId
-    });
+  void handleSubmit() {
+    print(
+        "phone: " + number.phoneNumber + ", valid: " + numberValid.toString());
+
+    if (true) {
+      widget.firestoreAdapter.updateDocument('smsWatchers', widget.userId, {
+        'lineId': widget.lineId,
+        'phoneNumber': widget.textController.text,
+        'userId': widget.userId
+      });
+      print("sent to firebase");
+    }
 
     setState(() {
-      RequestNumber.numberRequested = true;
+      numberSubmitted = true;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return RequestNumber.numberRequested
+    return (numberSubmitted && numberValid)
         ? Container()
         : Column(
             children: [
@@ -53,7 +61,7 @@ class _RequestNumberState extends State<RequestNumber> {
               Container(
                 width: widget.screenWidth * .25,
                 height: widget.screenHeight * .08,
-                child: TextField(
+                child: TextFormField(
                   controller: widget.textController,
                   style: TextStyle(fontFamily: 'LinLibertine'),
                   keyboardType: TextInputType.number,
@@ -62,6 +70,33 @@ class _RequestNumberState extends State<RequestNumber> {
                   ],
                 ),
               ),
+              // Container(
+              //   width: widget.screenWidth * .5,
+              //   height: widget.screenHeight * .08,
+              //   child: InternationalPhoneNumberInput(
+              //     onInputChanged: (PhoneNumber number) {
+              //       this.number = number;
+              //       print("number changed:" + number.phoneNumber);
+              //     },
+              //     onInputValidated: (bool value) {
+              //       this.numberValid = value;
+              //       print("number validated: " +
+              //           number.phoneNumber +
+              //           ", result: " +
+              //           value.toString());
+              //     },
+              // validator: (String param) {
+              //   PhoneNumberUtil.isValidPhoneNumber(
+              //       phoneNumber: this.number.phoneNumber,
+              //       isoCode: this.number.isoCode);
+              // return null;
+              // },
+              //     selectorTextStyle: TextStyle(color: Colors.black),
+              //     initialValue: number,
+              //     textFieldController: widget.textController,
+              //     inputBorder: OutlineInputBorder(),
+              //   ),
+              // ),
               FlatButton(
                 color: Colors.blueGrey[600],
                 textColor: Colors.white,
@@ -75,6 +110,18 @@ class _RequestNumberState extends State<RequestNumber> {
                 child: Text(
                   "Submit",
                   style: TextStyle(fontSize: 20.0, fontFamily: 'LinLibertine'),
+                ),
+              ),
+              Visibility(
+                visible: numberSubmitted && !numberValid,
+                child: Text(
+                  'Invalid phone number! Try again',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: widget.screenHeight * .03,
+                      fontFamily: 'LinLibertine'),
                 ),
               ),
             ],

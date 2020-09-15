@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'client_request_number.dart';
 import 'package:noLine/firestore_adapter.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:noLine/models/line.dart';
 import 'package:noLine/firestore_line_fetcher.dart';
 
@@ -20,65 +19,12 @@ class _InLineState extends State<InLine> {
   final firestoreAdapter = FirestoreAdapter();
   final firestoreLineFetcher = FirestoreLineFetcher();
 
-  String _positionInLine = "";
-  String _waitTime = "";
-
   int currentPositionInLine = 0;
   int userPositionInLine = 0;
 
   @override
   void initState() {
     super.initState();
-    updateStats();
-    firestoreLineFetcher.getLineStreamFromFirestore(widget.lineId);
-  }
-
-  Future<void> updateStats() async {
-    await getPosition();
-    await getWaitTime();
-
-    setState(() {});
-  }
-
-  Future<void> getCurrentPositionInLine() async {
-    DocumentSnapshot documentSnapshot =
-        await firestoreAdapter.getDocument(widget.lineId, 'line_data');
-    this.currentPositionInLine = documentSnapshot.data()['currentPlaceInLine'];
-
-    debugPrint("lineId: " +
-        widget.lineId +
-        ", currentPositionInLine: " +
-        this.currentPositionInLine.toString());
-  }
-
-  Future<void> getUserPositionInLine() async {
-    DocumentSnapshot documentSnapshot =
-        await firestoreAdapter.getDocument(widget.lineId, widget.userId);
-    this.userPositionInLine = documentSnapshot.data()['placeInLine'];
-
-    debugPrint("lineId: " +
-        widget.lineId +
-        ", userId: " +
-        widget.userId +
-        ", userPlaceInLine: " +
-        this.currentPositionInLine.toString());
-  }
-
-  Future<void> getPosition() async {
-    await getCurrentPositionInLine();
-    await getUserPositionInLine();
-
-    _positionInLine =
-        (this.userPositionInLine - this.currentPositionInLine).toString();
-  }
-
-  Future<void> getWaitTime() async {
-    await getCurrentPositionInLine();
-    await getUserPositionInLine();
-
-    _waitTime = ((this.userPositionInLine - this.currentPositionInLine) * 3.14)
-        .floor()
-        .toString();
   }
 
   @override
@@ -114,13 +60,16 @@ class _InLineState extends State<InLine> {
                   .getLineStreamFromFirestore(widget.lineId.toString()),
               builder: (context, snapshot) {
                 Line line = snapshot?.data ?? Line();
+
                 return Text(
-                  (line.usersInLine
-                              .where((user) => user.id == widget.userId)
-                              .first
-                              .placeInLine -
-                          line.currentPlaceInLine)
-                      .toString(),
+                  line.usersInLine == null
+                      ? ''
+                      : (line.usersInLine
+                                  .where((user) => user.id == widget.userId)
+                                  .first
+                                  .placeInLine -
+                              line.currentPlaceInLine)
+                          .toString(),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -137,14 +86,17 @@ class _InLineState extends State<InLine> {
                 Line line = snapshot?.data ?? Line();
                 return Text(
                   'Estimated wait time: ' +
-                      ((line.usersInLine
-                                      .where((user) => user.id == widget.userId)
-                                      .first
-                                      .placeInLine -
-                                  line.currentPlaceInLine) *
-                              3.14)
-                          .floor()
-                          .toString(),
+                      (line.usersInLine == null
+                          ? ''
+                          : ((line.usersInLine
+                                          .where((user) =>
+                                              user.id == widget.userId)
+                                          .first
+                                          .placeInLine -
+                                      line.currentPlaceInLine) *
+                                  3.14)
+                              .floor()
+                              .toString()),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
