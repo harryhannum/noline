@@ -3,11 +3,11 @@ import 'package:noLine/services/firestore_adapter.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 class RequestNumber extends StatefulWidget {
-  final screenWidth;
-  final screenHeight;
-  final textController;
-  final lineId;
-  final userId;
+  final double screenWidth;
+  final double screenHeight;
+  final TextEditingController textController;
+  final int lineId;
+  final String userId;
 
   final firestoreAdapter = FirestoreAdapter();
 
@@ -52,7 +52,7 @@ class _RequestNumberState extends State<RequestNumber> {
         : Column(
             children: [
               Text(
-                'Leave a phone number and we will call you \nwhen its close to your turn: ',
+                'Leave a phone number and we will call you when its close to your turn: ',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: widget.screenHeight * .02,
