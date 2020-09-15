@@ -17,9 +17,16 @@ class LineView extends StatefulWidget {
 
 class _LineViewState extends State<LineView> {
   final FirestoreLineFetcher firestoreLineFetcher = FirestoreLineFetcher();
+
+  String imageUrl(int lineId, int pixelsPerDimention) {
+    String additionalSubstring = lineId == null ? "" : "/${lineId}";
+    return "https://chart.googleapis.com/chart?cht=qr&chl=https%3A%2F%2Fnoline-dbc7f.web.app%2F%23%2Fjoin-line${additionalSubstring}&chs=${pixelsPerDimention}x${pixelsPerDimention}&choe=UTF-8&chld=L|2";
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
+    double qrDimentions = min(screenSize.width * .35, screenSize.height * .35);
 
     return Scaffold(
       appBar: MyAppBar(context),
@@ -52,9 +59,10 @@ class _LineViewState extends State<LineView> {
               height: screenSize.height / 30,
             ),
             Container(
-                width: min(screenSize.width / 3, screenSize.height / 3.5),
-                height: min(screenSize.width / 3, screenSize.height / 3.5),
-                child: Image.asset('assets/images/qr.png')),
+                width: qrDimentions,
+                height: qrDimentions,
+                child: Image.network(this.imageUrl(widget.lineId, qrDimentions.toInt()))
+            ),
             SizedBox(
               height: screenSize.height / 30,
             ),
