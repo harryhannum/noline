@@ -10,9 +10,8 @@ import 'package:noLine/screens/join_line.dart';
 // Import the firebase_core plugin
 import 'package:firebase_core/firebase_core.dart';
 
-import 'package:fluro/fluro.dart';
-
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(App());
 }
 

@@ -8,7 +8,7 @@ class RequestNumber extends StatefulWidget {
   final double screenHeight;
   final TextEditingController textController;
   final int lineId;
-  final String userId;
+  String userId;
 
   final firestoreAdapter = FirestoreAdapter();
 
@@ -34,9 +34,6 @@ class _RequestNumberState extends State<RequestNumber> {
   }
 
   void handleSubmit() {
-    print(
-        "phone: " + number.phoneNumber + ", valid: " + numberValid.toString());
-
     widget.firestoreAdapter.updateDocument(
         'smsWatchers', widget.lineId.toString() + '_' + widget.userId, {
       'lineId': widget.lineId.toString(),

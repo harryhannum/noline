@@ -29,7 +29,9 @@ class _InLineState extends State<InLine> {
   @override
   void initState() {
     super.initState();
-    login(widget.lineId);
+    login(widget.lineId).whenComplete(() {
+      setState(() {});
+    });
   }
 
   Future<bool> login(int lineId) async {
@@ -38,6 +40,7 @@ class _InLineState extends State<InLine> {
     int lastPlaceInLine = ++lineData.data()["lastPlaceInLine"];
 
     this.userId = CookieManager.getCookie("userId");
+
     //If User Doesn't Have A Cookie We Create A New Document And Save The Document Id As The User Id
     if (this.userId == "") {
       DocumentReference newUserDocument = await firestoreAdapter
