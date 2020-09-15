@@ -8,7 +8,7 @@ import 'package:noLine/models/line.dart';
 class LineManagement extends StatefulWidget {
   final lineId;
 
-  LineManagement(this.lineId, {Key key}) : super(key: key);
+  LineManagement({this.lineId = "0000", Key key}) : super(key: key);
 
   @override
   _LineManagementState createState() => _LineManagementState();
@@ -17,13 +17,20 @@ class LineManagement extends StatefulWidget {
 class _LineManagementState extends State<LineManagement> {
   final FirestoreLineFetcher firestoreLineFetcher = FirestoreLineFetcher();
   final FirestoreAdapter firestoreAdapter = FirestoreAdapter();
-
+  Stream<Line> lineStream;
   void advanceLine(Line line) {
     setState(() {
       firestoreAdapter.updateDocument(widget.lineId, "line_data",
           {"currentPlaceInLine": (line.currentPlaceInLine + 1)},
           merge: true);
     });
+  }
+
+  @override
+  void initState() {
+    lineStream = firestoreLineFetcher.getLineStreamFromFirestore(widget.lineId);
+
+    super.initState();
   }
 
   @override
@@ -38,65 +45,85 @@ class _LineManagementState extends State<LineManagement> {
           child: Column(
         children: [
           StreamBuilder(
-              stream: firestoreLineFetcher
-                  .getLineStreamFromFirestore(widget.lineId),
+              stream: lineStream,
               builder: (context, snapshot) {
                 Line line = snapshot?.data ?? Line();
 
                 return Column(
                   children: [
-                    Text("Line Management"),
                     Text(
-                      "Line ${widget.lineId}",
-                      style: subTitleStyle,
+                      "Line Management",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline4
+                          .merge(TextStyle(color: Colors.black54)),
+                    ),
+                    Text("Line ${widget.lineId ?? " Not Recognized"}",
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline5
+                            .merge(TextStyle(color: Colors.black87))),
+                    SizedBox(
+                      height: screenSize.height / 40,
                     ),
                     LineViewContainer(
                       line: line,
                     ),
-                    ((line?.currentPlaceInLine) ?? 0) >=
-                            ((line?.lastPlaceInLine) ?? 0)
-                        ? Container()
-                        : MaterialButton(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                            onPressed: () {
-                              advanceLine(line);
-                            },
+                    Container(
+                      margin: EdgeInsets.symmetric(
+                          vertical: screenSize.height / 45),
+                      width: screenSize.height / 1.5,
+                      height: screenSize.height / 3.5,
+                      child: Image.asset("assets/images/line.png"),
+                    ),
+                    Container(
+                      width: screenSize.height * 0.7,
+                      child: MaterialButton(
+                          color: Colors.white.withOpacity(0.20),
+                          onPressed: () {
+                            if (((line?.currentPlaceInLine) ?? 0) >=
+                                ((line?.lastPlaceInLine) ?? 0)) {
+                              return;
+                            }
+                            advanceLine(line);
+                          },
+                          child: Container(
+                            width: screenSize.width / 2,
+                            height: screenSize.height / 15,
                             child: FittedBox(
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: screenSize.width / 100),
                                 child: Text(
-                                  "NEXT PLEASE",
-                                  style: subTitleStyle
-                                      .merge(TextStyle(color: Colors.white)),
-                                ),
-                              ),
-                            ),
-                            color: Theme.of(context).primaryColor,
-                          ),
-                    MaterialButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/line-view',
-                            arguments: widget.lineId);
-                      },
-                      child: FittedBox(
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: screenSize.width / 100),
-                          child: Text(
-                            "View line",
-                            style: subTitleStyle
-                                .merge(TextStyle(color: Colors.white)),
-                          ),
-                        ),
-                      ),
-                      color: Theme.of(context).primaryColor,
-                    )
+                              'NEXT PLEASE',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline1
+                                  .merge(TextStyle(color: Colors.black87)),
+                            )),
+                          )),
+                    ),
+                    SizedBox(
+                      height: screenSize.height / 40,
+                    ),
+                    Container(
+                      width: screenSize.height * 0.7,
+                      child: RaisedButton(
+                          color: Colors.white.withOpacity(0.20),
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/line-view',
+                                arguments: widget.lineId);
+                          },
+                          child: Container(
+                            width: screenSize.width / 2,
+                            height: screenSize.height / 15,
+                            child: FittedBox(
+                                child: Text(
+                              'View the line to your customers',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline1
+                                  .merge(TextStyle(color: Colors.black87)),
+                            )),
+                          )),
+                    ),
                   ],
                 );
               }),
