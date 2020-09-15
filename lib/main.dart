@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:noLine/screens/client_in_line.dart';
 import 'package:noLine/screens/line_management.dart';
 import 'package:noLine/screens/line_view.dart';
 import 'package:noLine/screens/main_menu.dart';
@@ -87,7 +88,13 @@ class App extends StatelessWidget {
           '/line-mangement': (context) =>
               LineManagement(lineId: ModalRoute.of(context).settings.arguments),
           '/line-view': (context) =>
-              LineView(ModalRoute.of(context).settings.arguments)
+              LineView(ModalRoute.of(context).settings.arguments),
+          '/in-line': (context) {
+            Map<String, dynamic> args = ModalRoute.of(context)
+                .settings
+                .arguments as Map<String, dynamic>;
+            return InLine(args['lineId'], args['userId']);
+          }
         },
         theme: ThemeData(
           primarySwatch: Colors.blue,

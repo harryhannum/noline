@@ -4,7 +4,6 @@ import 'package:noLine/widgets/line_number_form.dart';
 import 'package:noLine/services/firestore_adapter.dart';
 import 'package:noLine/main.dart';
 import 'package:noLine/utils/cookie_manager.dart';
-import 'package:noLine/screens/client_in_line.dart';
 
 class JoinLine extends StatefulWidget {
   @override
@@ -88,15 +87,13 @@ class _JoinLineState extends State<JoinLine> {
               SizedBox(height: screenSize.height * 0.05),
               LineNumberForm((int lineId) async {
                 if (await handleSubmit(lineId)) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              InLine(lineId, userId)));
+                  Navigator.pushNamed(context, '/in-line', arguments: {
+                    'lineId': lineId, 'userId':userId
+                  });
                 }
               }),
               SizedBox(height: screenSize.height * 0.05),
-              Text("Or scan the QR code from\n your line manager",
+              Text("Or scan the QR code from your line manager",
                   style: subTitleStyle, textAlign: TextAlign.center),
               Text(errorText, style: errorTextStyle)
             ],
