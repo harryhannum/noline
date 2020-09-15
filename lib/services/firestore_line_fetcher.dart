@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:noLine/firestore_adapter.dart';
+import 'package:noLine/services/firestore_adapter.dart';
 import 'package:noLine/models/line.dart';
 import 'package:noLine/models/user.dart';
 

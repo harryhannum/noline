@@ -1,13 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:noLine/firestore_line_fetcher.dart';
-import 'package:noLine/line_view_container.dart';
+import 'package:noLine/services/firestore_line_fetcher.dart';
+import 'package:noLine/widgets/line_view_container.dart';
 import 'package:noLine/main.dart';
 import 'package:noLine/models/line.dart';
 
 class LineView extends StatefulWidget {
-  final String lineId; // lol
+  final int lineId;
 
   LineView(this.lineId);
 

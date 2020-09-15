@@ -4,7 +4,7 @@ import 'package:noLine/screens/line_view.dart';
 import 'package:noLine/screens/main_menu.dart';
 import 'package:noLine/screens/manager_login.dart';
 
-import 'package:noLine/client/clientMain.dart';
+import 'package:noLine/screens/join_line.dart';
 
 // Import the firebase_core plugin
 import 'package:firebase_core/firebase_core.dart';

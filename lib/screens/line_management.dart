@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:noLine/firestore_adapter.dart';
-import 'package:noLine/firestore_line_fetcher.dart';
-import 'package:noLine/line_view_container.dart';
+import 'package:noLine/services/firestore_adapter.dart';
+import 'package:noLine/services/firestore_line_fetcher.dart';
+import 'package:noLine/widgets/line_view_container.dart';
 import 'package:noLine/main.dart';
 import 'package:noLine/models/line.dart';
 
 class LineManagement extends StatefulWidget {
-  final lineId;
+  final int lineId;
 
-  LineManagement({this.lineId = "0000", Key key}) : super(key: key);
+  LineManagement({this.lineId = 0, Key key}) : super(key: key);
 
   @override
   _LineManagementState createState() => _LineManagementState();
@@ -20,7 +20,7 @@ class _LineManagementState extends State<LineManagement> {
   Stream<Line> lineStream;
   void advanceLine(Line line) {
     setState(() {
-      firestoreAdapter.updateDocument(widget.lineId, "line_data",
+      firestoreAdapter.updateDocument(widget.lineId.toString(), "line_data",
           {"currentPlaceInLine": (line.currentPlaceInLine + 1)},
           merge: true);
     });
@@ -28,7 +28,8 @@ class _LineManagementState extends State<LineManagement> {
 
   @override
   void initState() {
-    lineStream = firestoreLineFetcher.getLineStreamFromFirestore(widget.lineId);
+    lineStream = firestoreLineFetcher
+        .getLineStreamFromFirestore(widget.lineId.toString());
 
     super.initState();
   }
