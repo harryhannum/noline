@@ -6,7 +6,7 @@ import 'package:noLine/main.dart';
 import 'package:noLine/models/line.dart';
 
 class LineManagement extends StatefulWidget {
-  final lineId;
+  final int lineId;
 
   LineManagement(this.lineId, {Key key}) : super(key: key);
 
@@ -20,7 +20,7 @@ class _LineManagementState extends State<LineManagement> {
 
   void advanceLine(Line line) {
     setState(() {
-      firestoreAdapter.updateDocument(widget.lineId, "line_data",
+      firestoreAdapter.updateDocument(widget.lineId.toString(), "line_data",
           {"currentPlaceInLine": (line.currentPlaceInLine + 1)},
           merge: true);
     });
@@ -39,7 +39,7 @@ class _LineManagementState extends State<LineManagement> {
         children: [
           StreamBuilder(
               stream: firestoreLineFetcher
-                  .getLineStreamFromFirestore(widget.lineId),
+                  .getLineStreamFromFirestore(widget.lineId.toString()),
               builder: (context, snapshot) {
                 Line line = snapshot?.data ?? Line();
 

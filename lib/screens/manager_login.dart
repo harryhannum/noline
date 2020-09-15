@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:noLine/services/firestore_adapter.dart';
 import 'package:noLine/main.dart';
-import 'package:pinput/pin_put/pin_put.dart';
 import 'package:noLine/widgets/line_number_form.dart';
 
 class ManagerLogin extends StatefulWidget {
@@ -72,9 +71,9 @@ class _ManagerLoginState extends State<ManagerLogin> {
             SizedBox(
               height: screenSize.height / 20,
             ),
-            LineNumberForm((int lineID) {
+            LineNumberForm((int lineId) {
               Navigator.pushNamed(context, '/line-mangement',
-                  arguments: lineID.toString());
+                  arguments: lineId);
             }),
             SizedBox(
               height: screenSize.height / 20,
@@ -95,7 +94,7 @@ class _ManagerLoginState extends State<ManagerLogin> {
                 onPressed: () async {
                   int lineId = await createNewLinePressed();
                   Navigator.pushNamed(context, '/line-mangement',
-                      arguments: lineId.toString());
+                      arguments: lineId);
                 },
                 child: FittedBox(
                   child: Container(

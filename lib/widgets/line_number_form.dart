@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 
 class LineNumberForm extends StatefulWidget {
-  final void Function(int lineID) onSubmit;
+  final void Function(int lineId) onSubmit;
 
   LineNumberForm(this.onSubmit);
 
