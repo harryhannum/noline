@@ -80,7 +80,7 @@ class _InLineState extends State<InLine> {
       body: Center(
         child: Column(children: [
           SizedBox(height: screenSize.height * .04),
-          Text('You are in the line!',
+          Text('You are in line #${widget.lineId}!',
               textAlign: TextAlign.center,
               style: Theme.of(context)
                   .textTheme

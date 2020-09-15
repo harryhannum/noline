@@ -13,6 +13,8 @@ class LineNumberForm extends StatefulWidget {
 }
 
 class _LineNumberFormState extends State<LineNumberForm> {
+  String test = "";
+
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
@@ -73,24 +75,24 @@ class _LineNumberFormState extends State<LineNumberForm> {
           SizedBox(
             height: screenSize.height / 30,
           ),
-          Container(
-            width: screenSize.height * 0.6,
-            height: screenSize.height * 0.08,
-            child: RaisedButton(
-                color: Colors.white.withOpacity(0.20),
-                onPressed: () {
-                  if (isNumeric(_pinPutController.text)) {
-                    widget.onSubmit(int.parse(_pinPutController.text));
-                  } else {
-                    widget.onSubmit(0014);
-                  }
-                },
+          InkWell(
+            ontap: () {
+              setState(() {
+                test = _pinPutController.text;
+              });
+              /*if (isNumeric(_pinPutController.text.trim())) {
+                widget.onSubmit(int.parse(_pinPutController.text.trim()));
+              }*/
+            },
+            child: Container(
+                width: screenSize.height * 0.6,
+                height: screenSize.height * 0.08,
                 child: Container(
                   width: screenSize.width / 2,
                   height: screenSize.height / 15,
                   child: FittedBox(
                       child: Text(
-                    "submit",
+                    "'" + test + "'",
                     style:
                         Theme.of(context).textTheme.headline1.merge(TextStyle(
                               color: Colors.black87,
