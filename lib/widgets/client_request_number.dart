@@ -37,7 +37,8 @@ class _RequestNumberState extends State<RequestNumber> {
     print(
         "phone: " + number.phoneNumber + ", valid: " + numberValid.toString());
 
-    widget.firestoreAdapter.updateDocument('smsWatchers', widget.userId, {
+    widget.firestoreAdapter.updateDocument(
+        'smsWatchers', widget.lineId.toString() + '_' + widget.userId, {
       'lineId': widget.lineId.toString(),
       'phoneNumber': number.phoneNumber,
       'userId': widget.userId

@@ -3,13 +3,14 @@ import 'package:noLine/main.dart';
 import '../widgets/client_request_number.dart';
 import 'package:noLine/services/firestore_adapter.dart';
 import 'package:noLine/services/firestore_line_fetcher.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:noLine/models/line.dart';
+import 'package:noLine/utils/cookie_manager.dart';
 
 class InLine extends StatefulWidget {
   final int lineId;
-  final String userId;
 
-  InLine(this.lineId, this.userId);
+  InLine(this.lineId);
 
   @override
   _InLineState createState() => _InLineState();
@@ -20,16 +21,54 @@ class _InLineState extends State<InLine> {
   final firestoreAdapter = FirestoreAdapter();
   final firestoreLineFetcher = FirestoreLineFetcher();
 
+  String userId = "";
+
   int currentPositionInLine = 0;
   int userPositionInLine = 0;
 
   @override
   void initState() {
     super.initState();
+    login(widget.lineId);
+  }
+
+  Future<bool> login(int lineId) async {
+    DocumentSnapshot lineData =
+        await firestoreAdapter.getDocument(lineId.toString(), "line_data");
+    int lastPlaceInLine = ++lineData.data()["lastPlaceInLine"];
+
+    this.userId = CookieManager.getCookie("userId");
+    //If User Doesn't Have A Cookie We Create A New Document And Save The Document Id As The User Id
+    if (this.userId == "") {
+      DocumentReference newUserDocument = await firestoreAdapter
+          .addDocument(lineId.toString(), {"placeInLine": lastPlaceInLine});
+      CookieManager.addToCookie("userId", newUserDocument.id);
+      this.userId = newUserDocument.id;
+    }
+    //If The User Has An Id We Check If He's In Line
+    //If True We Continue
+    //If Not We Add Him In Last Place
+    else {
+      DocumentSnapshot userData =
+          await firestoreAdapter.getDocument(lineId.toString(), this.userId);
+      if (userData.exists) {
+        return true;
+      }
+
+      await firestoreAdapter.updateDocument(
+          lineId.toString(), this.userId, {"placeInLine": lastPlaceInLine});
+    }
+
+    await firestoreAdapter.updateDocument(
+        lineId.toString(), "line_data", {"lastPlaceInLine": lastPlaceInLine},
+        merge: true);
+
+    return true;
   }
 
   @override
   Widget build(BuildContext context) {
+    print(context);
     final Size screenSize = MediaQuery.of(context).size;
     final TextStyle titleStyle =
         TextStyle(fontSize: screenSize.height * .08, fontFamily: 'OpenSans');
@@ -72,11 +111,13 @@ class _InLineState extends State<InLine> {
                             widget.lineId.toString()),
                         builder: (context, snapshot) {
                           Line line = snapshot?.data ?? Line();
+                          bool isLoading =
+                              line.usersInLine == null || this.userId == "";
 
-                          int myPlaceInLine = line.usersInLine == null
+                          int myPlaceInLine = isLoading
                               ? -1
                               : (line.usersInLine
-                                      .where((user) => user.id == widget.userId)
+                                      .where((user) => user.id == this.userId)
                                       .first
                                       .placeInLine -
                                   line.currentPlaceInLine);
@@ -121,13 +162,15 @@ class _InLineState extends State<InLine> {
                   .getLineStreamFromFirestore(widget.lineId.toString()),
               builder: (context, snapshot) {
                 Line line = snapshot?.data ?? Line();
+                bool isLoading = line.usersInLine == null || this.userId == "";
+
                 return Text(
                   'Estimated wait time: ' +
-                      (line.usersInLine == null
+                      (isLoading
                           ? ''
                           : ((line.usersInLine
                                               .where((user) =>
-                                                  user.id == widget.userId)
+                                                  user.id == this.userId)
                                               .first
                                               .placeInLine -
                                           line.currentPlaceInLine) *
@@ -141,7 +184,7 @@ class _InLineState extends State<InLine> {
               }),
           SizedBox(height: screenSize.height * .03),
           RequestNumber(screenSize.width, screenSize.height, textController,
-              widget.lineId, widget.userId),
+              widget.lineId, this.userId),
         ]),
       ),
     );

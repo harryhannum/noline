@@ -10,6 +10,8 @@ import 'package:noLine/screens/join_line.dart';
 // Import the firebase_core plugin
 import 'package:firebase_core/firebase_core.dart';
 
+import 'package:fluro/fluro.dart';
+
 void main() {
   runApp(App());
 }
@@ -78,27 +80,43 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'noline',
-        debugShowCheckedModeBanner: false,
-        initialRoute: '/',
-        routes: {
-          '/': (context) => FirebaseLoginWrapper(),
-          '/manager-login': (context) => ManagerLogin(),
-          '/join-line': (context) => JoinLine(),
-          '/line-mangement': (context) =>
-              LineManagement(lineId: ModalRoute.of(context).settings.arguments),
-          '/line-view': (context) =>
-              LineView(ModalRoute.of(context).settings.arguments),
-          '/in-line': (context) {
-            Map<String, dynamic> args = ModalRoute.of(context)
-                .settings
-                .arguments as Map<String, dynamic>;
-            return InLine(args['lineId'], args['userId']);
-          }
-        },
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ));
+      title: 'noline',
+      debugShowCheckedModeBanner: false,
+      initialRoute: '/',
+      routes: {
+        '/': (context) => FirebaseLoginWrapper(),
+        '/manager-login': (context) => ManagerLogin(),
+        '/join-line': (context) => JoinLine(),
+        '/line-mangement': (context) =>
+            LineManagement(lineId: ModalRoute.of(context).settings.arguments),
+        '/line-view': (context) =>
+            LineView(ModalRoute.of(context).settings.arguments),
+        '/in-line': (context) {
+          Map<String, dynamic> args =
+              ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
+          return InLine(args['lineId']);
+        }
+      },
+      onGenerateRoute: (settings) {
+        final settingsUri = Uri.parse(settings.name);
+        final lineId = int.parse(settingsUri.queryParameters['id']);
+
+        if (settings.name.contains('line-management')) {
+          return MaterialPageRoute(
+              builder: (context) => LineManagement(lineId: lineId));
+        }
+        if (settings.name.contains('line-view')) {
+          return MaterialPageRoute(builder: (context) => LineView(lineId));
+        }
+
+        if (settings.name.contains('in-line')) {
+          return MaterialPageRoute(builder: (context) => InLine(lineId));
+        }
+      },
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+    );
   }
 }
