@@ -14,6 +14,12 @@ class _LineViewContainerState extends State<LineViewContainer> {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
+    final TextStyle boxTitlesStyle = Theme.of(context)
+        .textTheme
+        .headline5
+        .merge(TextStyle(color: Colors.black87));
+    final TextStyle numbersStyle = Theme.of(context).textTheme.headline3.merge(
+        TextStyle(color: Colors.black87, fontSize: screenSize.height * .07));
 
     return Column(children: [
       Row(
@@ -38,20 +44,16 @@ class _LineViewContainerState extends State<LineViewContainer> {
               child: Center(
                 child: Column(
                   children: [
-                    Text(
-                      "Current Place In Line:",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5
-                          .merge(TextStyle(color: Colors.black87)),
-                      textAlign: TextAlign.center,
+                    Container(
+                      height: screenSize.height * .1,
+                      child: FittedBox(
+                        child: Text("Current Place In Line:",
+                            style: boxTitlesStyle, textAlign: TextAlign.center),
+                      ),
                     ),
                     Text(
                       "${widget.line.currentPlaceInLine ?? "-"}",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline3
-                          .merge(TextStyle(color: Colors.black87)),
+                      style: numbersStyle,
                       textAlign: TextAlign.center,
                     ),
                   ],
@@ -82,20 +84,16 @@ class _LineViewContainerState extends State<LineViewContainer> {
               child: Center(
                 child: Column(
                   children: [
-                    Text(
-                      "Last Place In Line:",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5
-                          .merge(TextStyle(color: Colors.black87)),
-                      textAlign: TextAlign.center,
+                    Container(
+                      height: screenSize.height * .1,
+                      child: FittedBox(
+                        child: Text("Last Place In Line:",
+                            style: boxTitlesStyle, textAlign: TextAlign.center),
+                      ),
                     ),
                     Text(
                       "${widget.line.lastPlaceInLine ?? "-"}",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline3
-                          .merge(TextStyle(color: Colors.black87)),
+                      style: numbersStyle,
                       textAlign: TextAlign.center,
                     ),
                   ],
