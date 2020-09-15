@@ -5,8 +5,8 @@ import 'package:noLine/services/firestore_adapter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class InLine extends StatefulWidget {
-  int lineId;
-  String userId;
+  final int lineId;
+  final String userId;
 
   InLine(this.lineId, this.userId);
 

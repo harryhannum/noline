@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:noLine/services/firestore_adapter.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 class RequestNumber extends StatefulWidget {
   final screenWidth;
@@ -10,7 +10,6 @@ class RequestNumber extends StatefulWidget {
   final userId;
 
   final firestoreAdapter = FirestoreAdapter();
-  static bool numberRequested = false;
 
   RequestNumber(this.screenWidth, this.screenHeight, this.textController,
       this.lineId, this.userId);
@@ -20,9 +19,13 @@ class RequestNumber extends StatefulWidget {
 }
 
 class _RequestNumberState extends State<RequestNumber> {
+  PhoneNumber number = PhoneNumber(isoCode: 'IL');
+  bool numberValid = false;
+  bool numberSubmitted = false;
+
   void handleSubmit() {
-    print(widget.textController.text);
-    print(RequestNumber.numberRequested);
+    print(
+        "phone: " + number.phoneNumber + ", valid: " + numberValid.toString());
 
     widget.firestoreAdapter.updateDocument('smsWatchers', widget.userId, {
       'lineId': widget.lineId,
@@ -31,7 +34,9 @@ class _RequestNumberState extends State<RequestNumber> {
     });
 
     setState(() {
-      RequestNumber.numberRequested = true;
+      numberSubmitted = true;
+      numberValid =
+          true; // number validator isn't working currently, set it there when it's working
     });
   }
 
@@ -42,7 +47,7 @@ class _RequestNumberState extends State<RequestNumber> {
     final TextStyle subTitleStyle =
         TextStyle(fontSize: screenSize.height * .05, fontFamily: "OpenSans");
 
-    return RequestNumber.numberRequested
+    return (numberSubmitted && numberValid)
         ? Container()
         : Column(
             children: [
@@ -54,39 +59,52 @@ class _RequestNumberState extends State<RequestNumber> {
                     fontFamily: 'OpenSans'),
               ),
               Container(
-                width: widget.screenWidth * .25,
+                width: widget.screenWidth * .5,
                 height: widget.screenHeight * .08,
-                child: TextField(
-                  controller: widget.textController,
-                  style: TextStyle(fontFamily: 'OpenSans'),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly
-                  ],
+                child: InternationalPhoneNumberInput(
+                  onInputChanged: (PhoneNumber number) {
+                    this.number = number;
+                  },
+                  selectorTextStyle: TextStyle(color: Colors.black),
+                  initialValue: number,
+                  textFieldController: widget.textController,
+                  inputBorder: OutlineInputBorder(),
                 ),
               ),
               Container(
-            width: screenSize.height * 0.7,
-            child: MaterialButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5.0),
-              ),
-              onPressed: () {
-                handleSubmit();
-              },
-              child: FittedBox(
-                child: Container(
-                  padding:
-                      EdgeInsets.symmetric(vertical: screenSize.width / 100),
-                  child: Text(
-                    "submit",
-                    style: subTitleStyle.merge(TextStyle(color: Colors.white)),
+                width: screenSize.height * 0.7,
+                child: MaterialButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                  onPressed: () {
+                    handleSubmit();
+                  },
+                  child: FittedBox(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                          vertical: screenSize.width / 100),
+                      child: Text(
+                        "submit",
+                        style:
+                            subTitleStyle.merge(TextStyle(color: Colors.white)),
+                      ),
+                    ),
                   ),
                 ),
               ),
-              color: Theme.of(context).primaryColor,
-            ),
-          )
+              Visibility(
+                visible: numberSubmitted && !numberValid,
+                child: Text(
+                  'Invalid phone number! Try again',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: widget.screenHeight * .03,
+                      fontFamily: 'LinLibertine'),
+                ),
+              ),
             ],
           );
   }
