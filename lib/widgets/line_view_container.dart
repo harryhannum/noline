@@ -19,15 +19,15 @@ class _LineViewContainerState extends State<LineViewContainer> {
         .headline5
         .merge(TextStyle(color: Colors.black87));
     final TextStyle numbersStyle = Theme.of(context).textTheme.headline3.merge(
-        TextStyle(color: Colors.black87, fontSize: screenSize.height * .07));
+        TextStyle(color: Colors.black87, fontSize: screenSize.height * .04));
 
     return Column(children: [
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-            width: screenSize.height / 3.5,
-            height: screenSize.height / 4,
+            width: screenSize.height * .2,
+            height: screenSize.height * .2,
             child: Container(
               padding: EdgeInsets.all(screenSize.height / 50),
               decoration: BoxDecoration(
@@ -45,7 +45,7 @@ class _LineViewContainerState extends State<LineViewContainer> {
                 child: Column(
                   children: [
                     Container(
-                      height: screenSize.height * .1,
+                      height: screenSize.height * .07,
                       child: FittedBox(
                         child: Text("Current Place In Line:",
                             style: boxTitlesStyle, textAlign: TextAlign.center),
@@ -66,8 +66,8 @@ class _LineViewContainerState extends State<LineViewContainer> {
             height: 1,
           ),
           SizedBox(
-            width: screenSize.height / 3.5,
-            height: screenSize.height / 4,
+            width: screenSize.height * .2,
+            height: screenSize.height * .2,
             child: Container(
               padding: EdgeInsets.all(screenSize.height / 50),
               decoration: BoxDecoration(
@@ -85,7 +85,7 @@ class _LineViewContainerState extends State<LineViewContainer> {
                 child: Column(
                   children: [
                     Container(
-                      height: screenSize.height * .1,
+                      height: screenSize.height * .07,
                       child: FittedBox(
                         child: Text("Last Place In Line:",
                             style: boxTitlesStyle, textAlign: TextAlign.center),
