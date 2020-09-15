@@ -88,11 +88,9 @@ class _JoinLineState extends State<JoinLine> {
               SizedBox(height: screenSize.height * 0.05),
               LineNumberForm((int lineId) async {
                 if (await handleSubmit(lineId)) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              InLine(lineId, userId)));
+                  Navigator.pushNamed(context, '/in-line', arguments: {
+                    'lineId': lineId, 'userId':userId
+                  });
                 }
               }),
               SizedBox(height: screenSize.height * 0.05),

@@ -5,8 +5,8 @@ import 'package:noLine/services/firestore_adapter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class InLine extends StatefulWidget {
-  final int lineId;
-  final String userId;
+  int lineId;
+  String userId;
 
   InLine(this.lineId, this.userId);
 
@@ -82,19 +82,15 @@ class _InLineState extends State<InLine> {
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
     final TextStyle titleStyle =
-        TextStyle(fontSize: screenSize.height * 0.09, fontFamily: 'OpenSans');
-    final TextStyle subTitleStyle =
-        TextStyle(fontSize: screenSize.height * 0.06, fontFamily: "OpenSans");
-    final TextStyle errorTextStyle = TextStyle(
-        fontSize: screenSize.height * 0.05,
-        fontFamily: "OpenSans",
-        color: Colors.red);
+        TextStyle(fontSize: screenSize.height * .08, fontFamily: 'OpenSans');
+    final TextStyle contentStyle =
+        TextStyle(fontSize: screenSize.height * .04, fontFamily: "OpenSans");
 
     return Scaffold(
       appBar: MyAppBar(context),
       body: Center(
         child: Column(children: [
-          SizedBox(height: screenSize.height * 0.04),
+          SizedBox(height: screenSize.height * .04),
           Text(
             'You are in the line!',
             textAlign: TextAlign.center,
@@ -104,30 +100,18 @@ class _InLineState extends State<InLine> {
           Text(
             'Your position:',
             textAlign: TextAlign.center,
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-                fontSize: screenSize.height * .06,
-                fontFamily: 'LinLibertine'),
+            style: contentStyle
           ),
           Text(
             _positionInLine,
             textAlign: TextAlign.center,
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-                fontSize: screenSize.height * .04,
-                fontFamily: 'LinLibertine'),
+            style: contentStyle
           ),
           SizedBox(height: screenSize.height * .03),
           Text(
-            'Estimated wait time: ' + _waitTime,
+            'Estimated wait time: ' + _waitTime + ' minutes',
             textAlign: TextAlign.center,
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-                fontSize: screenSize.height * .03,
-                fontFamily: 'LinLibertine'),
+            style: contentStyle
           ),
           SizedBox(height: screenSize.height * .03),
           RequestNumber(screenSize.width, screenSize.height, textController,
