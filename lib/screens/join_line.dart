@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:noLine/NoLineTextField.dart';
+import 'package:noLine/noline_text_field.dart';
 import 'package:noLine/firestore_adapter.dart';
 import 'package:noLine/main.dart';
 import 'package:noLine/utils/cookie_manager.dart';

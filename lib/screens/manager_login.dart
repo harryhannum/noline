@@ -46,10 +46,6 @@ class _ManagerLoginState extends State<ManagerLogin> {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    final TextStyle titleStyle = TextStyle(
-        fontSize: screenSize.height / 10,
-        fontWeight: FontWeight.bold,
-        fontFamily: "OpenSans");
     final TextStyle subTitleStyle =
         TextStyle(fontSize: screenSize.height / 20, fontFamily: "OpenSans");
     final BoxDecoration pinPutDecoration = BoxDecoration(
