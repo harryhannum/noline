@@ -20,10 +20,6 @@ class _LineViewState extends State<LineView> {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    final TextStyle titleStyle = TextStyle(
-        fontSize: screenSize.height / 10,
-        fontWeight: FontWeight.bold,
-        fontFamily: "OpenSans");
 
     return Scaffold(
       appBar: MyAppBar(context),

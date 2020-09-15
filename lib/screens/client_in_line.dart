@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:noLine/main.dart';
 import '../widgets/client_request_number.dart';
 import 'package:noLine/services/firestore_adapter.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:noLine/services/firestore_line_fetcher.dart';
+import 'package:noLine/models/line.dart';
 
 class InLine extends StatefulWidget {
   final int lineId;
@@ -17,9 +18,7 @@ class InLine extends StatefulWidget {
 class _InLineState extends State<InLine> {
   final textController = TextEditingController();
   final firestoreAdapter = FirestoreAdapter();
-
-  String _positionInLine = "";
-  String _waitTime = "";
+  final firestoreLineFetcher = FirestoreLineFetcher();
 
   int currentPositionInLine = 0;
   int userPositionInLine = 0;
@@ -27,55 +26,6 @@ class _InLineState extends State<InLine> {
   @override
   void initState() {
     super.initState();
-    updateStats();
-  }
-
-  Future<void> updateStats() async {
-    await getPosition();
-    await getWaitTime();
-
-    setState(() {});
-  }
-
-  Future<void> getCurrentPositionInLine() async {
-    DocumentSnapshot documentSnapshot =
-        await firestoreAdapter.getDocument(widget.lineId.toString(), 'line_data');
-    this.currentPositionInLine = documentSnapshot.data()['currentPlaceInLine'];
-
-    debugPrint("lineId: " +
-        widget.lineId.toString() +
-        ", currentPositionInLine: " +
-        this.currentPositionInLine.toString());
-  }
-
-  Future<void> getUserPositionInLine() async {
-    DocumentSnapshot documentSnapshot =
-        await firestoreAdapter.getDocument(widget.lineId.toString(), widget.userId);
-    this.userPositionInLine = documentSnapshot.data()['placeInLine'];
-
-    debugPrint("lineId: " +
-        widget.lineId.toString() +
-        ", userId: " +
-        widget.userId +
-        ", userPlaceInLine: " +
-        this.currentPositionInLine.toString());
-  }
-
-  Future<void> getPosition() async {
-    await getCurrentPositionInLine();
-    await getUserPositionInLine();
-
-    _positionInLine =
-        (this.userPositionInLine - this.currentPositionInLine).toString();
-  }
-
-  Future<void> getWaitTime() async {
-    await getCurrentPositionInLine();
-    await getUserPositionInLine();
-
-    _waitTime = ((this.userPositionInLine - this.currentPositionInLine) * 3.14)
-        .floor()
-        .toString();
   }
 
   @override
@@ -91,28 +41,81 @@ class _InLineState extends State<InLine> {
       body: Center(
         child: Column(children: [
           SizedBox(height: screenSize.height * .04),
-          Text(
-            'You are in the line!',
-            textAlign: TextAlign.center,
-            style: titleStyle
-          ),
+          Text('You are in the line!',
+              textAlign: TextAlign.center, style: titleStyle),
           SizedBox(height: screenSize.height * .06),
-          Text(
-            'Your position:',
-            textAlign: TextAlign.center,
-            style: contentStyle
-          ),
-          Text(
-            _positionInLine,
-            textAlign: TextAlign.center,
-            style: contentStyle
+          SizedBox(
+            width: screenSize.height / 3.5,
+            height: screenSize.height / 4,
+            child: Container(
+              padding: EdgeInsets.all(screenSize.height / 50),
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey,
+                    offset: Offset(0.0, 2.0),
+                    blurRadius: 3.0,
+                  ),
+                ],
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              ),
+              child: Center(
+                child: Column(
+                  children: [
+                    Text(
+                      "Your position:",
+                      style: contentStyle,
+                      textAlign: TextAlign.center,
+                    ),
+                    StreamBuilder(
+                        stream: firestoreLineFetcher.getLineStreamFromFirestore(
+                            widget.lineId.toString()),
+                        builder: (context, snapshot) {
+                          Line line = snapshot?.data ?? Line();
+
+                          return Text(
+                            line.usersInLine == null
+                                ? ''
+                                : (line.usersInLine
+                                            .where((user) =>
+                                                user.id == widget.userId)
+                                            .first
+                                            .placeInLine -
+                                        line.currentPlaceInLine)
+                                    .toString(),
+                            textAlign: TextAlign.center,
+                            style: contentStyle,
+                          );
+                        }),
+                  ],
+                ),
+              ),
+            ),
           ),
           SizedBox(height: screenSize.height * .03),
-          Text(
-            'Estimated wait time: ' + _waitTime + ' minutes',
-            textAlign: TextAlign.center,
-            style: contentStyle
-          ),
+          StreamBuilder(
+              stream: firestoreLineFetcher
+                  .getLineStreamFromFirestore(widget.lineId.toString()),
+              builder: (context, snapshot) {
+                Line line = snapshot?.data ?? Line();
+                return Text(
+                  'Estimated wait time: ' +
+                      (line.usersInLine == null
+                          ? ''
+                          : ((line.usersInLine
+                                          .where((user) =>
+                                              user.id == widget.userId)
+                                          .first
+                                          .placeInLine -
+                                      line.currentPlaceInLine) *
+                                  3.14)
+                              .floor()
+                              .toString()),
+                  textAlign: TextAlign.center,
+                  style: contentStyle,
+                );
+              }),
           SizedBox(height: screenSize.height * .03),
           RequestNumber(screenSize.width, screenSize.height, textController,
               widget.lineId, widget.userId)

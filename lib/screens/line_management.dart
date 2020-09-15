@@ -37,8 +37,6 @@ class _LineManagementState extends State<LineManagement> {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    final TextStyle subTitleStyle =
-        TextStyle(fontSize: screenSize.height / 20, fontFamily: "OpenSans");
 
     return Scaffold(
       appBar: MyAppBar(context),
