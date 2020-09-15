@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:noLine/main.dart';
 import '../widgets/client_request_number.dart';
 import 'package:noLine/services/firestore_adapter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -79,30 +80,34 @@ class _InLineState extends State<InLine> {
 
   @override
   Widget build(BuildContext context) {
-    final double screenHeight = MediaQuery.of(context).size.height;
-    final double screenWidth = MediaQuery.of(context).size.width;
+    final Size screenSize = MediaQuery.of(context).size;
+    final TextStyle titleStyle =
+        TextStyle(fontSize: screenSize.height * 0.09, fontFamily: 'OpenSans');
+    final TextStyle subTitleStyle =
+        TextStyle(fontSize: screenSize.height * 0.06, fontFamily: "OpenSans");
+    final TextStyle errorTextStyle = TextStyle(
+        fontSize: screenSize.height * 0.05,
+        fontFamily: "OpenSans",
+        color: Colors.red);
 
     return Scaffold(
+      appBar: MyAppBar(context),
       body: Center(
         child: Column(children: [
-          SizedBox(height: screenHeight * .04),
+          SizedBox(height: screenSize.height * 0.04),
           Text(
             'You are in the line!',
             textAlign: TextAlign.center,
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-                fontSize: screenHeight * .09,
-                fontFamily: 'LinLibertine'),
+            style: titleStyle
           ),
-          SizedBox(height: screenHeight * .06),
+          SizedBox(height: screenSize.height * .06),
           Text(
             'Your position:',
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
-                fontSize: screenHeight * .06,
+                fontSize: screenSize.height * .06,
                 fontFamily: 'LinLibertine'),
           ),
           Text(
@@ -111,21 +116,21 @@ class _InLineState extends State<InLine> {
             style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
-                fontSize: screenHeight * .04,
+                fontSize: screenSize.height * .04,
                 fontFamily: 'LinLibertine'),
           ),
-          SizedBox(height: screenHeight * .03),
+          SizedBox(height: screenSize.height * .03),
           Text(
             'Estimated wait time: ' + _waitTime,
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
-                fontSize: screenHeight * .03,
+                fontSize: screenSize.height * .03,
                 fontFamily: 'LinLibertine'),
           ),
-          SizedBox(height: screenHeight * .03),
-          RequestNumber(screenWidth, screenHeight, textController,
+          SizedBox(height: screenSize.height * .03),
+          RequestNumber(screenSize.width, screenSize.height, textController,
               widget.lineId, widget.userId)
         ]),
       ),

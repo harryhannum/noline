@@ -15,17 +15,17 @@ class _JoinLineState extends State<JoinLine> {
   final textController = TextEditingController();
   final firestoreAdapter = FirestoreAdapter();
 
-  String text = "";
-
+  String errorText = "";
   String userId;
 
   Future<bool> handleSubmit(int lineId) async {
-    QuerySnapshot lineCollection = await firestoreAdapter.getCollection(lineId.toString());
+    QuerySnapshot lineCollection =
+        await firestoreAdapter.getCollection(lineId.toString());
 
     //Line Doesn't Exist
     if (lineCollection.size == 0) {
       setState(() {
-        text = "Requested line doesn't exist";
+        errorText = "Requested line doesn't exist";
       });
       return false;
     }
@@ -52,8 +52,8 @@ class _JoinLineState extends State<JoinLine> {
         return true;
       }
 
-      await firestoreAdapter
-          .updateDocument(lineId.toString(), userId, {"placeInLine": lastPlaceInLine});
+      await firestoreAdapter.updateDocument(
+          lineId.toString(), userId, {"placeInLine": lastPlaceInLine});
     }
 
     await firestoreAdapter.updateDocument(
@@ -65,30 +65,40 @@ class _JoinLineState extends State<JoinLine> {
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
+    final Size screenSize = MediaQuery.of(context).size;
+    final TextStyle titleStyle =
+        TextStyle(fontSize: screenSize.height * 0.09, fontFamily: 'OpenSans');
+    final TextStyle subTitleStyle =
+        TextStyle(fontSize: screenSize.height * 0.02, fontFamily: "OpenSans");
+    final TextStyle errorTextStyle = TextStyle(
+        fontSize: screenSize.height * 0.05,
+        fontFamily: "OpenSans",
+        color: Colors.red);
 
     return Scaffold(
         appBar: MyAppBar(context),
         body: Center(
           child: Column(
             children: <Widget>[
+              SizedBox(height: screenSize.height * 0.05),
               Text(
                 "Enter line code",
-                style: TextStyle(
-                    fontSize: screenHeight * 0.09, fontFamily: 'LinLibertine'),
+                style: titleStyle,
               ),
+              SizedBox(height: screenSize.height * 0.05),
               LineNumberForm((int lineId) async {
                 if (await handleSubmit(lineId)) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  InLine(lineId, userId)));
-                    }
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              InLine(lineId, userId)));
+                }
               }),
+              SizedBox(height: screenSize.height * 0.05),
               Text("Or scan the QR code from\n your line manager",
-                  textAlign: TextAlign.center),
-              Text(text),
+                  style: subTitleStyle, textAlign: TextAlign.center),
+              Text(errorText, style: errorTextStyle)
             ],
           ),
         ));
