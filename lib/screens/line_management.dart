@@ -115,7 +115,7 @@ class _LineManagementState extends State<LineManagement> {
                             height: screenSize.height / 15,
                             child: FittedBox(
                                 child: Text(
-                              'View the line to your customers',
+                              'View Mode',
                               style: Theme.of(context)
                                   .textTheme
                                   .headline1

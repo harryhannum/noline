@@ -82,7 +82,7 @@ class _LineViewState extends State<LineView> {
               style: Theme.of(context).textTheme.headline6,
             ),
             Text(
-              "+1 7207306218",
+              "+1 2095632969",
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headline3,
             ),

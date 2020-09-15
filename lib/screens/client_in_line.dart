@@ -118,41 +118,47 @@ class _InLineState extends State<InLine> {
                               line.usersInLine == null || this.userId == "";
 
                           int myPlaceInLine = isLoading
-                              ? -1
+                              ? -100000
                               : (line.usersInLine
                                       .where((user) => user.id == this.userId)
                                       .first
                                       .placeInLine -
                                   line.currentPlaceInLine);
 
-                          return (myPlaceInLine == -1)
+                          return (myPlaceInLine == -100000)
                               ? Text(
-                                  "Loading...",
+                                  "Loading",
                                   style: contentStyle,
                                   textAlign: TextAlign.center,
                                 )
-                              : (myPlaceInLine <= 0)
+                              : (myPlaceInLine < 0)
                                   ? Text(
-                                      "You're Up!",
+                                      "Your turn has passed...",
                                       style: contentStyle,
                                       textAlign: TextAlign.center,
                                     )
-                                  : Column(
-                                      children: [
-                                        Text(
-                                          "Your position:",
+                                  : (myPlaceInLine == 0)
+                                      ? Text(
+                                          "You're Up!",
                                           style: contentStyle,
                                           textAlign: TextAlign.center,
-                                        ),
-                                        Text(
-                                          myPlaceInLine.toString(),
-                                          textAlign: TextAlign.center,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline2,
-                                        ),
-                                      ],
-                                    );
+                                        )
+                                      : Column(
+                                          children: [
+                                            Text(
+                                              "Your position:",
+                                              style: contentStyle,
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            Text(
+                                              myPlaceInLine.toString(),
+                                              textAlign: TextAlign.center,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline2,
+                                            ),
+                                          ],
+                                        );
                         }),
                   ],
                 ),

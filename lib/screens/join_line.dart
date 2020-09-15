@@ -39,7 +39,7 @@ class _JoinLineState extends State<JoinLine> {
     final TextStyle subTitleStyle =
         TextStyle(fontSize: screenSize.height * 0.02, fontFamily: "OpenSans");
     final TextStyle errorTextStyle = TextStyle(
-        fontSize: screenSize.height * 0.05,
+        fontSize: screenSize.height * 0.03,
         fontFamily: "OpenSans",
         color: Colors.red);
 
