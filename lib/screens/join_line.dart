@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:noLine/widgets/line_number_form.dart';
 import 'package:noLine/services/firestore_adapter.dart';
 import 'package:noLine/main.dart';
-import 'package:noLine/utils/cookie_manager.dart';
 
 class JoinLine extends StatefulWidget {
   @override
@@ -28,36 +27,6 @@ class _JoinLineState extends State<JoinLine> {
       });
       return false;
     }
-
-    DocumentSnapshot lineData =
-        await firestoreAdapter.getDocument(lineId.toString(), "line_data");
-    int lastPlaceInLine = ++lineData.data()["lastPlaceInLine"];
-
-    userId = CookieManager.getCookie("userId");
-    //If User Doesn't Have A Cookie We Create A New Document And Save The Document Id As The User Id
-    if (userId == "") {
-      DocumentReference newUserDocument = await firestoreAdapter
-          .addDocument(lineId.toString(), {"placeInLine": lastPlaceInLine});
-      CookieManager.addToCookie("userId", newUserDocument.id);
-      userId = newUserDocument.id;
-    }
-    //If The User Has An Id We Check If He's In Line
-    //If True We Continue
-    //If Not We Add Him In Last Place
-    else {
-      DocumentSnapshot userData =
-          await firestoreAdapter.getDocument(lineId.toString(), userId);
-      if (userData.exists) {
-        return true;
-      }
-
-      await firestoreAdapter.updateDocument(
-          lineId.toString(), userId, {"placeInLine": lastPlaceInLine});
-    }
-
-    await firestoreAdapter.updateDocument(
-        lineId.toString(), "line_data", {"lastPlaceInLine": lastPlaceInLine},
-        merge: true);
 
     return true;
   }
@@ -91,7 +60,7 @@ class _JoinLineState extends State<JoinLine> {
               LineNumberForm((int lineId) async {
                 if (await handleSubmit(lineId)) {
                   Navigator.pushNamed(context, '/in-line',
-                      arguments: {'lineId': lineId, 'userId': userId});
+                      arguments: {'lineId': lineId});
                 }
               }),
               SizedBox(height: screenSize.height * 0.05),
