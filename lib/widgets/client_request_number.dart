@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:noLine/firestore_adapter.dart';
+import 'package:noLine/services/firestore_adapter.dart';
 
 class RequestNumber extends StatefulWidget {
   final screenWidth;

@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:noLine/noline_text_field.dart';
-import 'package:noLine/firestore_adapter.dart';
+import 'package:noLine/widgets/noline_text_field.dart';
+import 'package:noLine/services/firestore_adapter.dart';
 import 'package:noLine/main.dart';
 import 'package:noLine/utils/cookie_manager.dart';
-import 'package:noLine/client/client_in_line.dart';
+import 'package:noLine/widgets/client_in_line.dart';
 
 class JoinLine extends StatefulWidget {
   @override

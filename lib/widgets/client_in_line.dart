@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'client_request_number.dart';
-import 'package:noLine/firestore_adapter.dart';
+import 'package:noLine/services/firestore_adapter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class InLine extends StatefulWidget {
