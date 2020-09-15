@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'client_request_number.dart';
 import 'package:noLine/firestore_adapter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:noLine/models/line.dart';
+import 'package:noLine/firestore_line_fetcher.dart';
 
 class InLine extends StatefulWidget {
   final String lineId;
@@ -16,6 +18,7 @@ class InLine extends StatefulWidget {
 class _InLineState extends State<InLine> {
   final textController = TextEditingController();
   final firestoreAdapter = FirestoreAdapter();
+  final firestoreLineFetcher = FirestoreLineFetcher();
 
   String _positionInLine = "";
   String _waitTime = "";
@@ -27,6 +30,7 @@ class _InLineState extends State<InLine> {
   void initState() {
     super.initState();
     updateStats();
+    firestoreLineFetcher.getLineStreamFromFirestore(widget.lineId);
   }
 
   Future<void> updateStats() async {
@@ -105,25 +109,50 @@ class _InLineState extends State<InLine> {
                 fontSize: screenHeight * .06,
                 fontFamily: 'LinLibertine'),
           ),
-          Text(
-            _positionInLine,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-                fontSize: screenHeight * .04,
-                fontFamily: 'LinLibertine'),
-          ),
+          StreamBuilder(
+              stream: firestoreLineFetcher
+                  .getLineStreamFromFirestore(widget.lineId.toString()),
+              builder: (context, snapshot) {
+                Line line = snapshot?.data ?? Line();
+                return Text(
+                  (line.usersInLine
+                              .where((user) => user.id == widget.userId)
+                              .first
+                              .placeInLine -
+                          line.currentPlaceInLine)
+                      .toString(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: screenHeight * .04,
+                      fontFamily: 'LinLibertine'),
+                );
+              }),
           SizedBox(height: screenHeight * .03),
-          Text(
-            'Estimated wait time: ' + _waitTime,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-                fontSize: screenHeight * .03,
-                fontFamily: 'LinLibertine'),
-          ),
+          StreamBuilder(
+              stream: firestoreLineFetcher
+                  .getLineStreamFromFirestore(widget.lineId.toString()),
+              builder: (context, snapshot) {
+                Line line = snapshot?.data ?? Line();
+                return Text(
+                  'Estimated wait time: ' +
+                      ((line.usersInLine
+                                      .where((user) => user.id == widget.userId)
+                                      .first
+                                      .placeInLine -
+                                  line.currentPlaceInLine) *
+                              3.14)
+                          .floor()
+                          .toString(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: screenHeight * .03,
+                      fontFamily: 'LinLibertine'),
+                );
+              }),
           SizedBox(height: screenHeight * .03),
           RequestNumber(screenWidth, screenHeight, textController,
               widget.lineId, widget.userId)
