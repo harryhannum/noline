@@ -1,6 +1,6 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:noLine/main.dart';
-import 'package:noLine/screens/manager_login.dart';
 
 class MainMenu extends StatefulWidget {
   @override
@@ -20,22 +20,25 @@ class _MainMenuState extends State<MainMenu> {
       appBar: MyAppBar(context),
       body: Center(
         child: Container(
-          margin: EdgeInsets.only(top: screenSize.height / 10),
+          margin: EdgeInsets.only(top: screenSize.height / 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
+              Container(child: Image.asset('assets/images/tmp_icon.png')),
+              SizedBox(height: screenSize.height / 50),
+              TypewriterAnimatedTextKit(
+                  speed: Duration(milliseconds: 100),
+                  totalRepeatCount: 1,
+                  repeatForever: false,
+                  pause: Duration(milliseconds: 1000),
+                  text: ["Welcome to noline, connecting lines online."],
+                  textStyle: Theme.of(context).textTheme.headline5,
+                  displayFullTextOnTap: true,
+                  stopPauseOnTap: true),
               Container(
-                color: Colors.purple,
-                padding: EdgeInsets.symmetric(vertical: screenSize.height / 40, horizontal: screenSize.width / 20),
-                child: Text(
-                  'NOLINE',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: screenSize.height / 10,
-                      fontFamily: "Razuchka"),
-                ),
-              ),
-              SizedBox(height: screenSize.height / 4),
+                  width: screenSize.height / 2,
+                  child: Image.asset('assets/images/line.jpg')),
+              SizedBox(height: screenSize.height / 20),
               RaisedButton(
                   onPressed: () {
                     // Move to "enter line code page"

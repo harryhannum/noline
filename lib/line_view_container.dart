@@ -19,10 +19,6 @@ class _LineViewContainerState extends State<LineViewContainer> {
         TextStyle(fontSize: screenSize.height / 20, fontFamily: "OpenSans");
 
     return Column(children: [
-      Text(
-        "Line ${widget.line.lineId}",
-        style: subTitleStyle,
-      ),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -48,6 +44,7 @@ class _LineViewContainerState extends State<LineViewContainer> {
           ),
           SizedBox(
             width: screenSize.height / 20,
+            height: 1,
           ),
           SizedBox(
             width: screenSize.height / 3,

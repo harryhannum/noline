@@ -1,18 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:noLine/firestore_adapter.dart';
 import 'package:noLine/firestore_line_fetcher.dart';
 import 'package:noLine/line_view_container.dart';
 import 'package:noLine/main.dart';
 import 'package:noLine/models/line.dart';
-import 'package:noLine/models/user.dart';
 
 class LineView extends StatefulWidget {
-  LineView(int lineID) {
-    this.lineID = lineID;
-  }
+  final String lineId; // lol
 
-  int lineID;
+  LineView(this.lineId);
 
   @override
   _LineViewState createState() => _LineViewState();
@@ -34,19 +29,28 @@ class _LineViewState extends State<LineView> {
         child: Column(
           children: [
             Text(
-              "Line #${widget.lineID}",
+              "Line #${widget.lineId}",
               style: titleStyle,
             ),
             StreamBuilder(
-              stream: firestoreLineFetcher.getLineStreamFromFirestore(widget.lineID.toString()),
-              builder: (context, snapshot) {
-                Line line = snapshot?.data ?? Line();
-                return LineViewContainer(line: line);
-              }
+                stream: firestoreLineFetcher
+                    .getLineStreamFromFirestore(widget.lineId.toString()),
+                builder: (context, snapshot) {
+                  Line line = snapshot?.data ?? Line();
+                  return LineViewContainer(line: line);
+                }),
+            Text(
+              "Scan the QR code to join the line",
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.headline6,
+            ),
+            SizedBox(
+              width: screenSize.height / 10,
             ),
             Container(
-              child: Image.asset('assets/images/qr.png')
-            )
+                width: screenSize.height / 4,
+                height: screenSize.height / 4,
+                child: Image.asset('assets/images/qr.png'))
           ],
         ),
       ),
