@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:noLine/widgets/noline_text_field.dart';
+import 'package:noLine/widgets/line_number_form.dart';
 import 'package:noLine/services/firestore_adapter.dart';
 import 'package:noLine/main.dart';
 import 'package:noLine/utils/cookie_manager.dart';
-import 'package:noLine/widgets/client_in_line.dart';
+import 'package:noLine/screens/client_in_line.dart';
 
 class JoinLine extends StatefulWidget {
   @override
@@ -17,12 +17,10 @@ class _JoinLineState extends State<JoinLine> {
 
   String text = "";
 
-  String lineId;
   String userId;
 
-  Future<bool> handleSubmit() async {
-    lineId = textController.text;
-    QuerySnapshot lineCollection = await firestoreAdapter.getCollection(lineId);
+  Future<bool> handleSubmit(int lineId) async {
+    QuerySnapshot lineCollection = await firestoreAdapter.getCollection(lineId.toString());
 
     //Line Doesn't Exist
     if (lineCollection.size == 0) {
@@ -33,14 +31,14 @@ class _JoinLineState extends State<JoinLine> {
     }
 
     DocumentSnapshot lineData =
-        await firestoreAdapter.getDocument(lineId, "line_data");
+        await firestoreAdapter.getDocument(lineId.toString(), "line_data");
     int lastPlaceInLine = ++lineData.data()["lastPlaceInLine"];
 
     userId = CookieManager.getCookie("userId");
     //If User Doesn't Have A Cookie We Create A New Document And Save The Document Id As The User Id
     if (userId == "") {
       DocumentReference newUserDocument = await firestoreAdapter
-          .addDocument(lineId, {"placeInLine": lastPlaceInLine});
+          .addDocument(lineId.toString(), {"placeInLine": lastPlaceInLine});
       CookieManager.addToCookie("userId", newUserDocument.id);
       userId = newUserDocument.id;
     }
@@ -49,17 +47,17 @@ class _JoinLineState extends State<JoinLine> {
     //If Not We Add Him In Last Place
     else {
       DocumentSnapshot userData =
-          await firestoreAdapter.getDocument(lineId, userId);
+          await firestoreAdapter.getDocument(lineId.toString(), userId);
       if (userData.exists) {
         return true;
       }
 
       await firestoreAdapter
-          .updateDocument(lineId, userId, {"placeInLine": lastPlaceInLine});
+          .updateDocument(lineId.toString(), userId, {"placeInLine": lastPlaceInLine});
     }
 
     await firestoreAdapter.updateDocument(
-        lineId, "line_data", {"lastPlaceInLine": lastPlaceInLine},
+        lineId.toString(), "line_data", {"lastPlaceInLine": lastPlaceInLine},
         merge: true);
 
     return true;
@@ -68,7 +66,6 @@ class _JoinLineState extends State<JoinLine> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
         appBar: MyAppBar(context),
@@ -80,19 +77,15 @@ class _JoinLineState extends State<JoinLine> {
                 style: TextStyle(
                     fontSize: screenHeight * 0.09, fontFamily: 'LinLibertine'),
               ),
-              NoLineTextField(
-                  textController, screenWidth * 0.2, screenHeight * 0.08),
-              FlatButton(
-                  onPressed: () async {
-                    if (await handleSubmit()) {
+              LineNumberForm((int lineId) async {
+                if (await handleSubmit(lineId)) {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) =>
                                   InLine(lineId, userId)));
                     }
-                  },
-                  child: Text("Submit")),
+              }),
               Text("Or scan the QR code from\n your line manager",
                   textAlign: TextAlign.center),
               Text(text),

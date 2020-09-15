@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'client_request_number.dart';
+import '../widgets/client_request_number.dart';
 import 'package:noLine/services/firestore_adapter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class InLine extends StatefulWidget {
-  final String lineId;
+  final int lineId;
   final String userId;
 
   InLine(this.lineId, this.userId);
@@ -38,22 +38,22 @@ class _InLineState extends State<InLine> {
 
   Future<void> getCurrentPositionInLine() async {
     DocumentSnapshot documentSnapshot =
-        await firestoreAdapter.getDocument(widget.lineId, 'line_data');
+        await firestoreAdapter.getDocument(widget.lineId.toString(), 'line_data');
     this.currentPositionInLine = documentSnapshot.data()['currentPlaceInLine'];
 
     debugPrint("lineId: " +
-        widget.lineId +
+        widget.lineId.toString() +
         ", currentPositionInLine: " +
         this.currentPositionInLine.toString());
   }
 
   Future<void> getUserPositionInLine() async {
     DocumentSnapshot documentSnapshot =
-        await firestoreAdapter.getDocument(widget.lineId, widget.userId);
+        await firestoreAdapter.getDocument(widget.lineId.toString(), widget.userId);
     this.userPositionInLine = documentSnapshot.data()['placeInLine'];
 
     debugPrint("lineId: " +
-        widget.lineId +
+        widget.lineId.toString() +
         ", userId: " +
         widget.userId +
         ", userPlaceInLine: " +
