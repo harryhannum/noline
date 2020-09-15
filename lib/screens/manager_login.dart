@@ -74,7 +74,7 @@ class _ManagerLoginState extends State<ManagerLogin> {
               ),
             ),
             Container(
-              width: screenSize.height * 0.65,
+              width: screenSize.height * 0.6,
               child: RaisedButton(
                   color: Colors.white.withOpacity(0.20),
                   onPressed: () async {

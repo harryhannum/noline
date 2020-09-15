@@ -82,20 +82,26 @@ class _JoinLineState extends State<JoinLine> {
               SizedBox(height: screenSize.height * 0.05),
               Text(
                 "Enter line code",
-                style: titleStyle,
+                style: Theme.of(context)
+                    .textTheme
+                    .headline3
+                    .merge(TextStyle(color: Colors.black54)),
               ),
               SizedBox(height: screenSize.height * 0.05),
               LineNumberForm((int lineId) async {
                 if (await handleSubmit(lineId)) {
-                  Navigator.pushNamed(context, '/in-line', arguments: {
-                    'lineId': lineId, 'userId':userId
-                  });
+                  Navigator.pushNamed(context, '/in-line',
+                      arguments: {'lineId': lineId, 'userId': userId});
                 }
               }),
               SizedBox(height: screenSize.height * 0.05),
               Text("Or scan the QR code from your line manager",
                   style: subTitleStyle, textAlign: TextAlign.center),
-              Text(errorText, style: errorTextStyle)
+              Text(errorText, style: errorTextStyle),
+              Container(
+                height: screenSize.height / 3.2,
+                child: Image.asset("assets/images/qr_scan.jpg"),
+              ),
             ],
           ),
         ));

@@ -36,7 +36,7 @@ class _LineNumberFormState extends State<LineNumberForm> {
       child: Column(
         children: [
           Container(
-            width: screenSize.height * 0.6,
+            width: screenSize.height * 0.5,
             child: PinPut(
               fieldsCount: 4,
               eachFieldHeight: screenSize.height * 0.07,
@@ -47,6 +47,7 @@ class _LineNumberFormState extends State<LineNumberForm> {
                   .merge(TextStyle(color: Colors.black87)),
               onSubmit: (String pin) {},
               focusNode: _pinPutFocusNode,
+              autofocus: true,
               controller: _pinPutController,
               submittedFieldDecoration: pinPutDecoration.copyWith(
                   borderRadius: BorderRadius.circular(12.0),
@@ -68,7 +69,7 @@ class _LineNumberFormState extends State<LineNumberForm> {
             height: screenSize.height / 30,
           ),
           Container(
-            width: screenSize.height * 0.65,
+            width: screenSize.height * 0.6,
             height: screenSize.height * 0.08,
             child: RaisedButton(
                 color: Colors.white.withOpacity(0.20),

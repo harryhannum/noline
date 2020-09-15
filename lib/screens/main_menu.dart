@@ -69,7 +69,8 @@ class _MainMenuState extends State<MainMenu> {
                       totalRepeatCount: 1,
                       repeatForever: false,
                       pause: Duration(milliseconds: 1000),
-                      text: ["Welcome to noline, connecting lines online."],
+                      text: ["Welcome to noline \n connecting lines online."],
+                      textAlign: TextAlign.center,
                       textStyle: Theme.of(context)
                           .textTheme
                           .headline5
@@ -96,7 +97,7 @@ class _MainMenuState extends State<MainMenu> {
                   ),
                   SizedBox(height: screenSize.height / 20),
                   Container(
-                    width: screenSize.height * 0.7,
+                    width: screenSize.height * 0.65,
                     child: RaisedButton(
                         color: Colors.white.withOpacity(0.20),
                         onPressed: () {
@@ -116,9 +117,9 @@ class _MainMenuState extends State<MainMenu> {
                           )),
                         )),
                   ),
-                  SizedBox(height: buttonsDistance),
+                  SizedBox(height: screenSize.height / 40),
                   Container(
-                    width: screenSize.height * 0.7,
+                    width: screenSize.height * 0.65,
                     child: RaisedButton(
                         color: Colors.white.withOpacity(0.20),
                         onPressed: () {

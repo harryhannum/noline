@@ -104,7 +104,11 @@ class _LineViewContainerState extends State<LineViewContainer> {
             ),
           ),
         ],
-      )
+      ),
+      SizedBox(
+        width: screenSize.height / 40,
+        height: 1,
+      ),
     ]);
   }
 }
