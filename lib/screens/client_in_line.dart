@@ -42,11 +42,15 @@ class _InLineState extends State<InLine> {
         child: Column(children: [
           SizedBox(height: screenSize.height * .04),
           Text('You are in the line!',
-              textAlign: TextAlign.center, style: titleStyle),
+              textAlign: TextAlign.center,
+              style: Theme.of(context)
+                  .textTheme
+                  .headline3
+                  .merge(TextStyle(color: Colors.black54))),
           SizedBox(height: screenSize.height * .06),
           SizedBox(
-            width: screenSize.height / 3.5,
-            height: screenSize.height / 4,
+            width: screenSize.height / 2.5,
+            height: screenSize.height / 4.5,
             child: Container(
               padding: EdgeInsets.all(screenSize.height / 50),
               decoration: BoxDecoration(
@@ -63,30 +67,48 @@ class _InLineState extends State<InLine> {
               child: Center(
                 child: Column(
                   children: [
-                    Text(
-                      "Your position:",
-                      style: contentStyle,
-                      textAlign: TextAlign.center,
-                    ),
                     StreamBuilder(
                         stream: firestoreLineFetcher.getLineStreamFromFirestore(
                             widget.lineId.toString()),
                         builder: (context, snapshot) {
                           Line line = snapshot?.data ?? Line();
 
-                          return Text(
-                            line.usersInLine == null
-                                ? ''
-                                : (line.usersInLine
-                                            .where((user) =>
-                                                user.id == widget.userId)
-                                            .first
-                                            .placeInLine -
-                                        line.currentPlaceInLine)
-                                    .toString(),
-                            textAlign: TextAlign.center,
-                            style: contentStyle,
-                          );
+                          int myPlaceInLine = line.usersInLine == null
+                              ? -1
+                              : (line.usersInLine
+                                      .where((user) => user.id == widget.userId)
+                                      .first
+                                      .placeInLine -
+                                  line.currentPlaceInLine);
+
+                          return (myPlaceInLine == -1)
+                              ? Text(
+                                  "Loading...",
+                                  style: contentStyle,
+                                  textAlign: TextAlign.center,
+                                )
+                              : (myPlaceInLine == 0)
+                                  ? Text(
+                                      "Your Up!",
+                                      style: contentStyle,
+                                      textAlign: TextAlign.center,
+                                    )
+                                  : Column(
+                                      children: [
+                                        Text(
+                                          "Your position:",
+                                          style: contentStyle,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        Text(
+                                          myPlaceInLine.toString(),
+                                          textAlign: TextAlign.center,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline2,
+                                        ),
+                                      ],
+                                    );
                         }),
                   ],
                 ),
@@ -104,21 +126,22 @@ class _InLineState extends State<InLine> {
                       (line.usersInLine == null
                           ? ''
                           : ((line.usersInLine
-                                          .where((user) =>
-                                              user.id == widget.userId)
-                                          .first
-                                          .placeInLine -
-                                      line.currentPlaceInLine) *
-                                  3.14)
-                              .floor()
-                              .toString()),
+                                              .where((user) =>
+                                                  user.id == widget.userId)
+                                              .first
+                                              .placeInLine -
+                                          line.currentPlaceInLine) *
+                                      3.14)
+                                  .floor()
+                                  .toString() +
+                              " minutes"),
                   textAlign: TextAlign.center,
                   style: contentStyle,
                 );
               }),
           SizedBox(height: screenSize.height * .03),
           RequestNumber(screenSize.width, screenSize.height, textController,
-              widget.lineId, widget.userId)
+              widget.lineId, widget.userId),
         ]),
       ),
     );

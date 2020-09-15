@@ -59,40 +59,40 @@ class _RequestNumberState extends State<RequestNumber> {
                     fontFamily: 'OpenSans'),
               ),
               Container(
-                width: widget.screenWidth * .5,
+                width: widget.screenHeight * 0.55,
                 height: widget.screenHeight * .08,
                 child: InternationalPhoneNumberInput(
                   onInputChanged: (PhoneNumber number) {
                     this.number = number;
                   },
+                  countries: ['IL', 'US', 'IT', 'FR', 'SP', 'UA'],
                   selectorTextStyle: TextStyle(color: Colors.black),
                   initialValue: number,
                   textFieldController: widget.textController,
                   inputBorder: OutlineInputBorder(),
                 ),
               ),
-              Container(
-                width: screenSize.height * 0.7,
-                child: MaterialButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
+              SizedBox(
+                height: screenSize.height / 20,
+              ),
+              RaisedButton(
+                  color: Colors.white.withOpacity(0.20),
                   onPressed: () {
                     handleSubmit();
                   },
-                  child: FittedBox(
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                          vertical: screenSize.width / 100),
-                      child: Text(
-                        "submit",
-                        style:
-                            subTitleStyle.merge(TextStyle(color: Colors.white)),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+                  child: Container(
+                    width: screenSize.height / 2,
+                    height: screenSize.height / 15,
+                    child: FittedBox(
+                        child: Text(
+                      "submit",
+                      style:
+                          Theme.of(context).textTheme.headline1.merge(TextStyle(
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w300,
+                              )),
+                    )),
+                  )),
               Visibility(
                 visible: numberSubmitted && !numberValid,
                 child: Text(
