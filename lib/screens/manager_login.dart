@@ -50,7 +50,7 @@ class _ManagerLoginState extends State<ManagerLogin> {
               style: Theme.of(context)
                   .textTheme
                   .headline2
-                  .merge(TextStyle(color: Colors.black87)),
+                  .merge(TextStyle(color: Colors.black54)),
             ),
             Text(
               "Enter existing line code",
@@ -66,41 +66,42 @@ class _ManagerLoginState extends State<ManagerLogin> {
               Navigator.pushNamed(context, '/line-mangement',
                   arguments: lineId);
             }),
-            SizedBox(
-              height: screenSize.height / 20,
-            ),
-            Text(
-              "OR",
-              style: subTitleStyle,
-            ),
-            SizedBox(
-              height: screenSize.height / 20,
+            Container(
+              margin: EdgeInsets.all(screenSize.height / 100),
+              child: Text(
+                "OR",
+                style: subTitleStyle,
+              ),
             ),
             Container(
-              width: screenSize.height * 0.7,
-              child: MaterialButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-                onPressed: () async {
-                  int lineId = await createNewLinePressed();
-                  Navigator.pushNamed(context, '/line-mangement',
-                      arguments: lineId);
-                },
-                child: FittedBox(
+              width: screenSize.height * 0.65,
+              child: RaisedButton(
+                  color: Colors.white.withOpacity(0.20),
+                  onPressed: () async {
+                    int lineId = await createNewLinePressed();
+                    Navigator.pushNamed(context, '/line-mangement',
+                        arguments: lineId);
+                  },
                   child: Container(
-                    padding:
-                        EdgeInsets.symmetric(vertical: screenSize.width / 100),
-                    child: Text(
-                      "create a new line",
+                    width: screenSize.width / 2,
+                    height: screenSize.height / 15,
+                    child: FittedBox(
+                        child: Text(
+                      'create a new line',
                       style:
-                          subTitleStyle.merge(TextStyle(color: Colors.white)),
-                    ),
-                  ),
-                ),
-                color: Theme.of(context).primaryColor,
-              ),
-            )
+                          Theme.of(context).textTheme.headline1.merge(TextStyle(
+                                color: Colors.black87,
+                              )),
+                    )),
+                  )),
+            ),
+            SizedBox(
+              height: screenSize.height / 40,
+            ),
+            Container(
+              height: screenSize.height / 3.2,
+              child: Image.asset("assets/images/line_manager.jpg"),
+            ),
           ],
         ),
       ),

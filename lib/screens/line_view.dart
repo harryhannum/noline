@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:noLine/services/firestore_line_fetcher.dart';
 import 'package:noLine/widgets/line_view_container.dart';
@@ -30,7 +32,10 @@ class _LineViewState extends State<LineView> {
           children: [
             Text(
               "Line #${widget.lineId}",
-              style: titleStyle,
+              style: Theme.of(context)
+                  .textTheme
+                  .headline2
+                  .merge(TextStyle(color: Colors.black54)),
             ),
             StreamBuilder(
                 stream: firestoreLineFetcher
@@ -39,18 +44,34 @@ class _LineViewState extends State<LineView> {
                   Line line = snapshot?.data ?? Line();
                   return LineViewContainer(line: line);
                 }),
+            SizedBox(
+              height: screenSize.height / 20,
+            ),
             Text(
               "Scan the QR code to join the line",
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headline6,
             ),
             SizedBox(
-              width: screenSize.height / 10,
+              height: screenSize.height / 30,
             ),
             Container(
-                width: screenSize.height / 4,
-                height: screenSize.height / 4,
-                child: Image.asset('assets/images/qr.png'))
+                width: min(screenSize.width / 3, screenSize.height / 3.5),
+                height: min(screenSize.width / 3, screenSize.height / 3.5),
+                child: Image.asset('assets/images/qr.png')),
+            SizedBox(
+              height: screenSize.height / 30,
+            ),
+            Text(
+              "Or text this phone number any message to join",
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.headline6,
+            ),
+            Text(
+              "+1 7207306218",
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.headline3,
+            ),
           ],
         ),
       ),

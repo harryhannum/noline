@@ -17,11 +17,18 @@ void main() {
 class MyAppBar extends AppBar {
   MyAppBar(BuildContext context)
       : super(
-          title: Text('NOLINE'),
+          backgroundColor: Colors.transparent,
+          textTheme: Theme.of(context).textTheme,
+          title: Text(''),
+          elevation: 0,
+          toolbarHeight: MediaQuery.of(context).size.height / 15,
           leading: !Navigator.canPop(context)
               ? null
               : new IconButton(
-                  icon: new Icon(Icons.arrow_back),
+                  icon: new Icon(
+                    Icons.arrow_back,
+                    color: Colors.black54,
+                  ),
                   onPressed: () {
                     if (Navigator.canPop(context)) {
                       Navigator.pop(context);
@@ -71,14 +78,15 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'NOLINE',
+        title: 'noline',
+        debugShowCheckedModeBanner: false,
         initialRoute: '/',
         routes: {
           '/': (context) => FirebaseLoginWrapper(),
           '/manager-login': (context) => ManagerLogin(),
           '/join-line': (context) => JoinLine(),
           '/line-mangement': (context) =>
-              LineManagement(ModalRoute.of(context).settings.arguments),
+              LineManagement(lineId: ModalRoute.of(context).settings.arguments),
           '/line-view': (context) =>
               LineView(ModalRoute.of(context).settings.arguments),
           '/in-line': (context) {

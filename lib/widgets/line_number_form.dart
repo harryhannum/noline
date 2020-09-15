@@ -15,8 +15,6 @@ class _LineNumberFormState extends State<LineNumberForm> {
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
     final FocusNode _pinPutFocusNode = FocusNode();
-    final TextStyle subTitleStyle =
-        TextStyle(fontSize: screenSize.height / 20, fontFamily: "OpenSans");
     final TextEditingController _pinPutController = TextEditingController();
 
     final BoxDecoration pinPutDecoration = BoxDecoration(
@@ -52,7 +50,7 @@ class _LineNumberFormState extends State<LineNumberForm> {
               controller: _pinPutController,
               submittedFieldDecoration: pinPutDecoration.copyWith(
                   borderRadius: BorderRadius.circular(12.0),
-                  border: Border.all(color: Theme.of(context).primaryColor)),
+                  border: Border.all(color: Colors.black12)),
               selectedFieldDecoration: pinPutDecoration,
               followingFieldDecoration: pinPutDecoration.copyWith(
                 border: Border.all(
@@ -67,32 +65,32 @@ class _LineNumberFormState extends State<LineNumberForm> {
             ),
           ),
           SizedBox(
-            height: screenSize.height / 20,
+            height: screenSize.height / 30,
           ),
           Container(
-            width: screenSize.height * 0.7,
-            child: MaterialButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5.0),
-              ),
-              onPressed: () {
-                if (isNumeric(_pinPutController.text)) {
-                  widget.onSubmit(int.parse(_pinPutController.text));
-                }
-              },
-              child: FittedBox(
+            width: screenSize.height * 0.65,
+            height: screenSize.height * 0.08,
+            child: RaisedButton(
+                color: Colors.white.withOpacity(0.20),
+                onPressed: () {
+                  if (isNumeric(_pinPutController.text)) {
+                    widget.onSubmit(int.parse(_pinPutController.text));
+                  }
+                },
                 child: Container(
-                  padding:
-                      EdgeInsets.symmetric(vertical: screenSize.width / 100),
-                  child: Text(
+                  width: screenSize.width / 2,
+                  height: screenSize.height / 15,
+                  child: FittedBox(
+                      child: Text(
                     "submit",
-                    style: subTitleStyle.merge(TextStyle(color: Colors.white)),
-                  ),
-                ),
-              ),
-              color: Theme.of(context).primaryColor,
-            ),
-          )
+                    style:
+                        Theme.of(context).textTheme.headline1.merge(TextStyle(
+                              color: Colors.black87,
+                              fontWeight: FontWeight.w300,
+                            )),
+                  )),
+                )),
+          ),
         ],
       ),
     );
