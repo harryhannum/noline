@@ -128,9 +128,9 @@ class _InLineState extends State<InLine> {
                                   style: contentStyle,
                                   textAlign: TextAlign.center,
                                 )
-                              : (myPlaceInLine == 0)
+                              : (myPlaceInLine <= 0)
                                   ? Text(
-                                      "Your Up!",
+                                      "You're Up!",
                                       style: contentStyle,
                                       textAlign: TextAlign.center,
                                     )
