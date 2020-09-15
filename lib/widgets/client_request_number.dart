@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:noLine/services/firestore_adapter.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:noLine/utils/cookie_manager.dart';
 
 class RequestNumber extends StatefulWidget {
   final double screenWidth;
@@ -23,15 +24,25 @@ class _RequestNumberState extends State<RequestNumber> {
   bool numberValid = false;
   bool numberSubmitted = false;
 
+  _RequestNumberState() {
+    String phoneNumber = CookieManager.getCookie("phoneNumber");
+    // If the user already registered for messages, don't let him register again
+    if (phoneNumber == number.phoneNumber) {
+      numberValid = true;
+      numberSubmitted = true;
+    }
+  }
+
   void handleSubmit() {
     print(
         "phone: " + number.phoneNumber + ", valid: " + numberValid.toString());
 
     widget.firestoreAdapter.updateDocument('smsWatchers', widget.userId, {
       'lineId': widget.lineId.toString(),
-      'phoneNumber': widget.textController.text,
+      'phoneNumber': number.phoneNumber,
       'userId': widget.userId
     });
+    CookieManager.addToCookie("phoneNumber", number.phoneNumber);
 
     setState(() {
       numberSubmitted = true;
