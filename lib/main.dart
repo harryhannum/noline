@@ -69,7 +69,7 @@ class FirebaseLoginWrapper extends StatelessWidget {
               break;
           }
 
-          return Text("fuck");
+          return Text("");
         });
   }
 }
