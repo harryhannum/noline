@@ -166,21 +166,18 @@ class _InLineState extends State<InLine> {
               builder: (context, snapshot) {
                 Line line = snapshot?.data ?? Line();
                 bool isLoading = line.usersInLine == null || this.userId == "";
+                int minutesLeft = ((line.usersInLine
+                                .where((user) => user.id == this.userId)
+                                .first
+                                .placeInLine -
+                            line.currentPlaceInLine) *
+                        3.14)
+                    .floor();
 
+                if (minutesLeft < 0) minutesLeft = 0;
                 return Text(
                   'Estimated wait time: ' +
-                      (isLoading
-                          ? ''
-                          : ((line.usersInLine
-                                              .where((user) =>
-                                                  user.id == this.userId)
-                                              .first
-                                              .placeInLine -
-                                          line.currentPlaceInLine) *
-                                      3.14)
-                                  .floor()
-                                  .toString() +
-                              " minutes"),
+                      (isLoading ? '' : (minutesLeft.toString() + " minutes")),
                   textAlign: TextAlign.center,
                   style: contentStyle,
                 );
