@@ -5,7 +5,7 @@ import 'package:noLine/main.dart';
 import 'package:noLine/models/line.dart';
 
 class LineView extends StatefulWidget {
-  final String lineId; // lol
+  final int lineId;
 
   LineView(this.lineId);
 

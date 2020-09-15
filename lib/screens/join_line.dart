@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:noLine/widgets/noline_text_field.dart';
+import 'package:noLine/widgets/line_number_form.dart';
 import 'package:noLine/services/firestore_adapter.dart';
 import 'package:noLine/main.dart';
 import 'package:noLine/utils/cookie_manager.dart';
-import 'package:noLine/widgets/client_in_line.dart';
 
 class JoinLine extends StatefulWidget {
   @override
@@ -15,32 +14,30 @@ class _JoinLineState extends State<JoinLine> {
   final textController = TextEditingController();
   final firestoreAdapter = FirestoreAdapter();
 
-  String text = "";
-
-  String lineId;
+  String errorText = "";
   String userId;
 
-  Future<bool> handleSubmit() async {
-    lineId = textController.text;
-    QuerySnapshot lineCollection = await firestoreAdapter.getCollection(lineId);
+  Future<bool> handleSubmit(int lineId) async {
+    QuerySnapshot lineCollection =
+        await firestoreAdapter.getCollection(lineId.toString());
 
     //Line Doesn't Exist
     if (lineCollection.size == 0) {
       setState(() {
-        text = "Requested line doesn't exist";
+        errorText = "Requested line doesn't exist";
       });
       return false;
     }
 
     DocumentSnapshot lineData =
-        await firestoreAdapter.getDocument(lineId, "line_data");
+        await firestoreAdapter.getDocument(lineId.toString(), "line_data");
     int lastPlaceInLine = ++lineData.data()["lastPlaceInLine"];
 
     userId = CookieManager.getCookie("userId");
     //If User Doesn't Have A Cookie We Create A New Document And Save The Document Id As The User Id
     if (userId == "") {
       DocumentReference newUserDocument = await firestoreAdapter
-          .addDocument(lineId, {"placeInLine": lastPlaceInLine});
+          .addDocument(lineId.toString(), {"placeInLine": lastPlaceInLine});
       CookieManager.addToCookie("userId", newUserDocument.id);
       userId = newUserDocument.id;
     }
@@ -49,17 +46,17 @@ class _JoinLineState extends State<JoinLine> {
     //If Not We Add Him In Last Place
     else {
       DocumentSnapshot userData =
-          await firestoreAdapter.getDocument(lineId, userId);
+          await firestoreAdapter.getDocument(lineId.toString(), userId);
       if (userData.exists) {
         return true;
       }
 
-      await firestoreAdapter
-          .updateDocument(lineId, userId, {"placeInLine": lastPlaceInLine});
+      await firestoreAdapter.updateDocument(
+          lineId.toString(), userId, {"placeInLine": lastPlaceInLine});
     }
 
     await firestoreAdapter.updateDocument(
-        lineId, "line_data", {"lastPlaceInLine": lastPlaceInLine},
+        lineId.toString(), "line_data", {"lastPlaceInLine": lastPlaceInLine},
         merge: true);
 
     return true;
@@ -67,35 +64,38 @@ class _JoinLineState extends State<JoinLine> {
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
+    final Size screenSize = MediaQuery.of(context).size;
+    final TextStyle titleStyle =
+        TextStyle(fontSize: screenSize.height * 0.09, fontFamily: 'OpenSans');
+    final TextStyle subTitleStyle =
+        TextStyle(fontSize: screenSize.height * 0.02, fontFamily: "OpenSans");
+    final TextStyle errorTextStyle = TextStyle(
+        fontSize: screenSize.height * 0.05,
+        fontFamily: "OpenSans",
+        color: Colors.red);
 
     return Scaffold(
         appBar: MyAppBar(context),
         body: Center(
           child: Column(
             children: <Widget>[
+              SizedBox(height: screenSize.height * 0.05),
               Text(
                 "Enter line code",
-                style: TextStyle(
-                    fontSize: screenHeight * 0.09, fontFamily: 'LinLibertine'),
+                style: titleStyle,
               ),
-              NoLineTextField(
-                  textController, screenWidth * 0.2, screenHeight * 0.08),
-              FlatButton(
-                  onPressed: () async {
-                    if (await handleSubmit()) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  InLine(lineId, userId)));
-                    }
-                  },
-                  child: Text("Submit")),
-              Text("Or scan the QR code from\n your line manager",
-                  textAlign: TextAlign.center),
-              Text(text),
+              SizedBox(height: screenSize.height * 0.05),
+              LineNumberForm((int lineId) async {
+                if (await handleSubmit(lineId)) {
+                  Navigator.pushNamed(context, '/in-line', arguments: {
+                    'lineId': lineId, 'userId':userId
+                  });
+                }
+              }),
+              SizedBox(height: screenSize.height * 0.05),
+              Text("Or scan the QR code from your line manager",
+                  style: subTitleStyle, textAlign: TextAlign.center),
+              Text(errorText, style: errorTextStyle)
             ],
           ),
         ));

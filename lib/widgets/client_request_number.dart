@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:noLine/services/firestore_adapter.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
@@ -43,6 +42,11 @@ class _RequestNumberState extends State<RequestNumber> {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+
+    final TextStyle subTitleStyle =
+        TextStyle(fontSize: screenSize.height * .05, fontFamily: "OpenSans");
+
     return (numberSubmitted && numberValid)
         ? Container()
         : Column(
@@ -51,10 +55,8 @@ class _RequestNumberState extends State<RequestNumber> {
                 'Leave a phone number and we will call you \nwhen its close to your turn: ',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    fontSize: widget.screenHeight * .03,
-                    fontFamily: 'LinLibertine'),
+                    fontSize: widget.screenHeight * .02,
+                    fontFamily: 'OpenSans'),
               ),
               Container(
                 width: widget.screenWidth * .5,
@@ -69,19 +71,26 @@ class _RequestNumberState extends State<RequestNumber> {
                   inputBorder: OutlineInputBorder(),
                 ),
               ),
-              FlatButton(
-                color: Colors.blueGrey[600],
-                textColor: Colors.white,
-                disabledColor: Colors.grey,
-                disabledTextColor: Colors.black,
-                padding: EdgeInsets.all(8.0),
-                splashColor: Colors.blueGrey,
-                onPressed: () {
-                  handleSubmit();
-                },
-                child: Text(
-                  "Submit",
-                  style: TextStyle(fontSize: 20.0, fontFamily: 'LinLibertine'),
+              Container(
+                width: screenSize.height * 0.7,
+                child: MaterialButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                  onPressed: () {
+                    handleSubmit();
+                  },
+                  child: FittedBox(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                          vertical: screenSize.width / 100),
+                      child: Text(
+                        "submit",
+                        style:
+                            subTitleStyle.merge(TextStyle(color: Colors.white)),
+                      ),
+                    ),
+                  ),
                 ),
               ),
               Visibility(
